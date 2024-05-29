@@ -3,6 +3,8 @@ from requests_pkcs12 import post
 from cryptography.fernet import Fernet
 import json
 import os
+#WT_add
+import xml.etree.ElementTree as ET
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 key = b'NthBRA5htGkZprUpudAG-Guh5UTcbxwT50Jwvg7ePV0='
@@ -21,16 +23,28 @@ def make_header(user, userpass):
 
 
 def make_payload(name, surname, birth):
+    #WT_version up becasue security risk if the inputs (name, surname, birth) are not properly sanitized, as it can lead to XML injection vulnerabilities.
+    root = ET.Element('tns:SPIELER-SUCHPARAMETER', 
+                      xmlns_ns2="http://www.hzd.de/meldungskatalogItem", 
+                      xmlns_tns="http://www.hzd.de/spielerSuchparameter")
+    
+    spieler = ET.SubElement(root, 'SPIELER')
+    ET.SubElement(spieler, 'V').text = surname
+    ET.SubElement(spieler, 'N').text = name
+    ET.SubElement(spieler, 'D').text = birth
+    
+    return ET.tostring(root, encoding='unicode', method='xml')
 
-    return '''
-        <tns:SPIELER-SUCHPARAMETER xmlns:ns2="http://www.hzd.de/meldungskatalogItem" xmlns:tns="http://www.hzd.de/spielerSuchparameter">
-        <SPIELER>
-        <V>''' + surname + '''</V>
-        <N>''' + name + '''</N>
-        <D>''' + birth + '''</D>
-        </SPIELER>
-        </tns:SPIELER-SUCHPARAMETER>
-        '''
+    #origin code
+    # return '''
+    #     <tns:SPIELER-SUCHPARAMETER xmlns:ns2="http://www.hzd.de/meldungskatalogItem" xmlns:tns="http://www.hzd.de/spielerSuchparameter">
+    #     <SPIELER>
+    #     <V>''' + surname + '''</V>
+    #     <N>''' + name + '''</N>
+    #     <D>''' + birth + '''</D>
+    #     </SPIELER>
+    #     </tns:SPIELER-SUCHPARAMETER>
+    #     '''
 
 
 def connect_gov(sys_id, firstname, lastname, birth):
@@ -61,6 +75,7 @@ def connect_gov(sys_id, firstname, lastname, birth):
     file = open(info_filepath, 'rb')
     data = file.read()
     decrypted_data = fernet.decrypt(data).decode()
+    
     data_list = decrypted_data.split('***')
     url = data_list[0]
     user = data_list[1]
