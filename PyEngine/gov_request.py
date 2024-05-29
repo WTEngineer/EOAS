@@ -48,54 +48,88 @@ def make_payload(name, surname, birth):
 
 
 def connect_gov(sys_id, firstname, lastname, birth):
-    year = birth[6:]
-    month = birth[3:5]
-    day = birth[:2]
 
-    birthday = year + '-' + month + '-' + day
-    payload = make_payload(firstname, lastname, birthday)
-    print(payload)
+    try:
+        year = birth[6:]
+        month = birth[3:5]
+        day = birth[:2]
 
-    # # load cert info file
-    # file = open('certification/test.json', 'r')
-    # data = json.load(file)
-    #
-    # url = data['url']
-    #
-    # head = make_header(data['user'], data['userpass'])
-    # cert_pass = data['certpass']
+        birthday = year + '-' + month + '-' + day
+        payload = make_payload(firstname, lastname, birthday)
+        print(payload)
 
-    if os.path.exists(ROOT_DIR + '/cert_files/cert_info.bin'):
-        info_filepath = ROOT_DIR + '/cert_files/cert_info.bin'
-        cert_filepath = ROOT_DIR + '/cert_files/cert_file.p12'
-    else:
-        info_filepath = ROOT_DIR + '/cert_files/test.bin'
-        cert_filepath = ROOT_DIR + '/cert_files/test.p12'
+        # # load cert info file
+        # file = open('certification/test.json', 'r')
+        # data = json.load(file)
+        #
+        # url = data['url']
+        #
+        # head = make_header(data['user'], data['userpass'])
+        # cert_pass = data['certpass']
 
-    file = open(info_filepath, 'rb')
-    data = file.read()
-    decrypted_data = fernet.decrypt(data).decode()
-    
-    data_list = decrypted_data.split('***')
-    url = data_list[0]
-    user = data_list[1]
-    userpass = data_list[2]
-    cert_pass = data_list[3]
+        if os.path.exists(ROOT_DIR + '/cert_files/cert_info.bin'):
+            info_filepath = ROOT_DIR + '/cert_files/cert_info.bin'
+            cert_filepath = ROOT_DIR + '/cert_files/cert_file.p12'
+        else:
+            info_filepath = ROOT_DIR + '/cert_files/test.bin'
+            cert_filepath = ROOT_DIR + '/cert_files/test.p12'
+        #origin data
+        # file = open(info_filepath, 'rb')
+        # data = file.read()
+        # decrypted_data = fernet.decrypt(data).decode()
 
-    head = make_header(user, userpass)
+        #WT_except handle
+        try:
+            with open(info_filepath, 'rb') as file:
+                data = file.read()
+        except FileNotFoundError as e:
+            print(f"Error: {e}")
+            return "Certificate information file not found"
+        except Exception as e:
+            print(f"Error reading file: {e}")
+            return "Error reading certificate information file"
 
-    print("--- Ready to send request ---")
+        try:
+            fernet = Fernet(fernet_key)
+            decrypted_data = fernet.decrypt(data).decode()
+        except Exception as e:
+            print(f"Error decrypting data: {e}")
+            return "Error decrypting certificate information"
 
-    Resp = post(url, data= payload, headers=head , pkcs12_filename=cert_filepath, pkcs12_password=cert_pass, verify=True) # If you need a response package To verify, you need to pass the verification
-    # print (Resp.text)
+        data_list = decrypted_data.split('***')
+        url = data_list[0]
+        user = data_list[1]
+        userpass = data_list[2]
+        cert_pass = data_list[3]
 
-    text = Resp.text
-    tem = text.split('<MELDUNG>')[1]
-    res = tem.split('</MELDUNG>')[0]
-    print(res)
+        head = make_header(user, userpass)
 
-    return res
+        print("--- Ready to send request ---")
 
+        # Send request
+        try:
+            Resp = post(url, data= payload, headers=head , pkcs12_filename=cert_filepath, pkcs12_password=cert_pass, verify=True) # If you need a response package To verify, you need to pass the verification
+            Resp.raise_for_status()     # Check for HTTP errors
+        except requests.exceptions.RequestException as e:
+            print(f"Error sending request: {e}")
+            return f"Error sending request: {e}"
+        # print (Resp.text)
+
+        # Process response
+        try:
+            text = Resp.text
+            tem = text.split('<MELDUNG>')[1]
+            res = tem.split('</MELDUNG>')[0]
+        except IndexError as e:
+            print(f"Error processing response: {e}")
+            return "Error processing response"       
+
+        print(res)
+        return res
+        
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return f"Unexpected error: {e}"
 
 if __name__ == '__main__':
     firstname = 'Ismail'
