@@ -60,3 +60,12 @@ class FaceAnalysis:
             ret.append(face)
         return ret
 
+    #WT_exception
+    def run(self, img, ctx_id=0, det_thresh=0.5, det_size=(640, 640), max_num=0):
+        try:
+            self.prepare(ctx_id, det_thresh, det_size)
+            return self.get(img, max_num)
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return []        
+
