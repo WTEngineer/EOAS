@@ -49,7 +49,6 @@ def make_payload(name, surname, birth):
 
 def connect_gov(sys_id, firstname, lastname, birth):
 
-    try:
         year = birth[6:]
         month = birth[3:5]
         day = birth[:2]
@@ -109,27 +108,18 @@ def connect_gov(sys_id, firstname, lastname, birth):
         # Send request
         try:
             Resp = post(url, data= payload, headers=head , pkcs12_filename=cert_filepath, pkcs12_password=cert_pass, verify=True) # If you need a response package To verify, you need to pass the verification
-            Resp.raise_for_status()     # Check for HTTP errors
-        except requests.exceptions.RequestException as e:
-            print(f"Error sending request: {e}")
-            return f"Error sending request: {e}"
-        # print (Resp.text)
+            Resp.raise_for_status() 
 
-        # Process response
-        try:
             text = Resp.text
             tem = text.split('<MELDUNG>')[1]
             res = tem.split('</MELDUNG>')[0]
+
+            print(res)
+            return res
+
         except IndexError as e:
             print(f"Error processing response: {e}")
             return "Error processing response"       
-
-        print(res)
-        return res
-        
-    except Exception as e:
-        print(f"Unexpected error: {e}")
-        return f"Unexpected error: {e}"
 
 if __name__ == '__main__':
     firstname = 'Ismail'
@@ -138,6 +128,8 @@ if __name__ == '__main__':
 
     # key = b'NthBRA5htGkZprUpudAG-Guh5UTcbxwT50Jwvg7ePV0='
     # fernet = Fernet(key)
-
-    result = connect_gov('12', firstname, lastname, birth)
-    print(result)
+    try:
+        result = connect_gov('12', firstname, lastname, birth)
+        print(result)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")

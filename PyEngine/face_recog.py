@@ -8,25 +8,31 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class FaceRecognizer:
     def __init__(self):
-        self.model = FaceAnalysis(name='analg_face', root='.')
-        self.model.prepare(ctx_id=0, det_thresh=0.5, det_size=(640, 640))
-        self.expansion_rate = [0.1, 0.4, 0.1, 0.1]
+         try:
+            self.model = FaceAnalysis(name='analg_face', root='.')
+            self.model.prepare(ctx_id=0, det_thresh=0.5, det_size=(640, 640))
+            self.expansion_rate = [0.1, 0.4, 0.1, 0.1]
+        except Exception as e:
+            print(f"Error initializing FaceAnalysis model: {e}")
 
     def get_similarity(self, emb1, emb2):
-        dot = np.sum(np.multiply(emb1, emb2), axis=0)
-        norm = np.linalg.norm(emb1, axis=0) * np.linalg.norm(emb2, axis=0)
-        similarity = min(1, max(-1, dot / norm))
-        cosdist = min(0.5, np.arccos(similarity) / math.pi)
-        pcnt = 0
-        thr = 0.35
-        if cosdist <= thr:
-            pcnt = (0.2 / thr) * cosdist
-        elif cosdist > thr and cosdist <= 0.5:
-            pcnt = 5.33333 * cosdist - 1.66667
-        pcnt = (1.0 - pcnt) * 100
-        pcnt = min(100, pcnt)
-        return pcnt
-
+        try:
+            dot = np.sum(np.multiply(emb1, emb2), axis=0)
+            norm = np.linalg.norm(emb1, axis=0) * np.linalg.norm(emb2, axis=0)
+            similarity = min(1, max(-1, dot / norm))
+            cosdist = min(0.5, np.arccos(similarity) / math.pi)
+            pcnt = 0
+            thr = 0.35
+            if cosdist <= thr:
+                pcnt = (0.2 / thr) * cosdist
+            elif cosdist > thr and cosdist <= 0.5:
+                pcnt = 5.33333 * cosdist - 1.66667
+            pcnt = (1.0 - pcnt) * 100
+            pcnt = min(100, pcnt)
+            return pcnt
+        except Exception as e:
+            print(f"Error calculating similarity: {e}")
+            return None
     def crop_face(self, image, box):
         frameW = image.shape[1]
         framwH = image.shape[0]

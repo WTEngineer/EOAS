@@ -157,9 +157,10 @@ L_ST_VAL = "background-color: rgb(255, 255, 255);" \
             "font: 12pt \"Arial\";" \
 
 
-spcial_char_map = {ord('ä'): 'ae', ord('ü'): 'ue', ord('ö'): 'oe', ord('ß'): 'ss', ord('Ä'): 'Ae', ord('Ü'): 'Ue',
-                   ord('Ö'): 'Oe'}
-
+# spcial_char_map = {ord('ï¿½'): 'ae', ord('ï¿½'): 'ue', ord('ï¿½'): 'oe', ord('ï¿½'): 'ss', ord('ï¿½'): 'Ae', ord('ï¿½'): 'Ue',
+#                    ord('ï¿½'): 'Oe'}
+spcial_char_map = {ord(' '): 'ae', ord(' '): 'ue', ord(' '): 'oe', ord(' '): 'ss', ord(' '): 'Ae', ord(' '): 'Ue',
+                   ord(' '): 'Oe'}
 
 class FaceRecogSys(QtWidgets.QMainWindow):
     cam1_capture_signal = pyqtSignal()
@@ -196,7 +197,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
 
         self.warning_danger_message = QtWidgets.QLabel(self)
         self.warning_danger_message.setAlignment(QtCore.Qt.AlignCenter)
-        self.warning_danger_message.setText("Person gefährlich !")
+        self.warning_danger_message.setText("Person gefï¿½hrlich !")
         self.warning_danger_message.setGeometry(int(600 * X_SCALE), int(0 * Y_SCALE), int(200 * X_SCALE), int(40 * Y_SCALE))
         self.warning_danger_message.setStyleSheet(L_BG_W_1)
         self.warning_danger_message.hide()
@@ -509,7 +510,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
 
         self.pm_person_1_delete_btn = QtWidgets.QPushButton(self)
         self.pm_person_1_delete_btn.setGeometry(int(75 * X_SCALE), int(250 * Y_SCALE), int(60 * X_SCALE), int(25 * Y_SCALE))
-        self.pm_person_1_delete_btn.setText("Löschen")
+        self.pm_person_1_delete_btn.setText("Lï¿½schen")
         self.pm_person_1_delete_btn.setStyleSheet(L_BT_N)
 
         self.pm_person_2 = QtWidgets.QLabel(self)
@@ -543,7 +544,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.pm_person_2_delete_btn = QtWidgets.QPushButton(self)
         self.pm_person_2_delete_btn.setGeometry(int(210 * X_SCALE), int(250 * Y_SCALE), int(60 * X_SCALE),
                                              int(25 * Y_SCALE))
-        self.pm_person_2_delete_btn.setText("Löschen")
+        self.pm_person_2_delete_btn.setText("Lï¿½schen")
         self.pm_person_2_delete_btn.setStyleSheet(L_BT_N)
 
         self.pm_person_3 = QtWidgets.QLabel(self)
@@ -577,7 +578,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.pm_person_3_delete_btn = QtWidgets.QPushButton(self)
         self.pm_person_3_delete_btn.setGeometry(int(345 * X_SCALE), int(250 * Y_SCALE), int(60 * X_SCALE),
                                              int(25 * Y_SCALE))
-        self.pm_person_3_delete_btn.setText("Löschen")
+        self.pm_person_3_delete_btn.setText("Lï¿½schen")
         self.pm_person_3_delete_btn.setStyleSheet(L_BT_N)
 
         self.pm_person_4 = QtWidgets.QLabel(self)
@@ -611,7 +612,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.pm_person_4_delete_btn = QtWidgets.QPushButton(self)
         self.pm_person_4_delete_btn.setGeometry(int(480 * X_SCALE), int(250 * Y_SCALE), int(60 * X_SCALE),
                                              int(25 * Y_SCALE))
-        self.pm_person_4_delete_btn.setText("Löschen")
+        self.pm_person_4_delete_btn.setText("Lï¿½schen")
         self.pm_person_4_delete_btn.setStyleSheet(L_BT_N)
 
         self.pm_person_5 = QtWidgets.QLabel(self)
@@ -645,7 +646,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.pm_person_5_delete_btn = QtWidgets.QPushButton(self)
         self.pm_person_5_delete_btn.setGeometry(int(615 * X_SCALE), int(250 * Y_SCALE), int(60 * X_SCALE),
                                              int(25 * Y_SCALE))
-        self.pm_person_5_delete_btn.setText("Löschen")
+        self.pm_person_5_delete_btn.setText("Lï¿½schen")
         self.pm_person_5_delete_btn.setStyleSheet(L_BT_N)
 
         self.pm_person_6 = QtWidgets.QLabel(self)
@@ -679,7 +680,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.pm_person_6_delete_btn = QtWidgets.QPushButton(self)
         self.pm_person_6_delete_btn.setGeometry(int(75 * X_SCALE), int(495 * Y_SCALE), int(60 * X_SCALE),
                                              int(25 * Y_SCALE))
-        self.pm_person_6_delete_btn.setText("Löschen")
+        self.pm_person_6_delete_btn.setText("Lï¿½schen")
         self.pm_person_6_delete_btn.setStyleSheet(L_BT_N)
 
         self.pm_person_7 = QtWidgets.QLabel(self)
@@ -713,7 +714,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.pm_person_7_delete_btn = QtWidgets.QPushButton(self)
         self.pm_person_7_delete_btn.setGeometry(int(210 * X_SCALE), int(495 * Y_SCALE), int(60 * X_SCALE),
                                              int(25 * Y_SCALE))
-        self.pm_person_7_delete_btn.setText("Löschen")
+        self.pm_person_7_delete_btn.setText("Lï¿½schen")
         self.pm_person_7_delete_btn.setStyleSheet(L_BT_N)
 
         self.pm_person_8 = QtWidgets.QLabel(self)
@@ -747,7 +748,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.pm_person_8_delete_btn = QtWidgets.QPushButton(self)
         self.pm_person_8_delete_btn.setGeometry(int(345 * X_SCALE), int(495 * Y_SCALE), int(60 * X_SCALE),
                                              int(25 * Y_SCALE))
-        self.pm_person_8_delete_btn.setText("Löschen")
+        self.pm_person_8_delete_btn.setText("Lï¿½schen")
         self.pm_person_8_delete_btn.setStyleSheet(L_BT_N)
 
         self.pm_person_9 = QtWidgets.QLabel(self)
@@ -781,7 +782,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.pm_person_9_delete_btn = QtWidgets.QPushButton(self)
         self.pm_person_9_delete_btn.setGeometry(int(480 * X_SCALE), int(495 * Y_SCALE), int(60 * X_SCALE),
                                              int(25 * Y_SCALE))
-        self.pm_person_9_delete_btn.setText("Löschen")
+        self.pm_person_9_delete_btn.setText("Lï¿½schen")
         self.pm_person_9_delete_btn.setStyleSheet(L_BT_N)
 
         self.pm_person_10 = QtWidgets.QLabel(self)
@@ -815,12 +816,12 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.pm_person_10_delete_btn = QtWidgets.QPushButton(self)
         self.pm_person_10_delete_btn.setGeometry(int(615 * X_SCALE), int(495 * Y_SCALE), int(60 * X_SCALE),
                                              int(25 * Y_SCALE))
-        self.pm_person_10_delete_btn.setText("Löschen")
+        self.pm_person_10_delete_btn.setText("Lï¿½schen")
         self.pm_person_10_delete_btn.setStyleSheet(L_BT_N)
 
         self.pm_add_btn = QtWidgets.QPushButton(self)
         self.pm_add_btn.setGeometry(int(395 * X_SCALE), int(555 * Y_SCALE), int(80 * X_SCALE), int(25 * Y_SCALE))
-        self.pm_add_btn.setText("Hinzufügen")
+        self.pm_add_btn.setText("Hinzufï¿½gen")
         self.pm_add_btn.setStyleSheet(L_BT_N)
 
         self.pm_import_btn = QtWidgets.QPushButton(self)
@@ -1279,7 +1280,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
 
         self.pe_safety_type = QtWidgets.QComboBox(self)
         self.pe_safety_type.addItem("Nicht zugeordnet")
-        self.pe_safety_type.addItem("Unauffällig")
+        self.pe_safety_type.addItem("Unauffï¿½llig")
         self.pe_safety_type.addItem("Manipulationsverdacht")
         self.pe_safety_type.addItem("Manipulator")
         self.pe_safety_type.setGeometry(int(450 * X_SCALE), int(170 * Y_SCALE), int(170 * X_SCALE), int(20 * Y_SCALE))
@@ -1406,7 +1407,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.um_user_1_delete_btn = QtWidgets.QPushButton(self)
         self.um_user_1_delete_btn.setGeometry(int(75 * X_SCALE), int(250 * Y_SCALE), int(60 * X_SCALE),
                                                 int(25 * Y_SCALE))
-        self.um_user_1_delete_btn.setText("Löschen")
+        self.um_user_1_delete_btn.setText("Lï¿½schen")
         self.um_user_1_delete_btn.setStyleSheet(L_BT_N)
 
         self.um_user_2 = QtWidgets.QLabel(self)
@@ -1441,7 +1442,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.um_user_2_delete_btn = QtWidgets.QPushButton(self)
         self.um_user_2_delete_btn.setGeometry(int(210 * X_SCALE), int(250 * Y_SCALE), int(60 * X_SCALE),
                                                 int(25 * Y_SCALE))
-        self.um_user_2_delete_btn.setText("Löschen")
+        self.um_user_2_delete_btn.setText("Lï¿½schen")
         self.um_user_2_delete_btn.setStyleSheet(L_BT_N)
 
         self.um_user_3 = QtWidgets.QLabel(self)
@@ -1475,7 +1476,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.um_user_3_delete_btn = QtWidgets.QPushButton(self)
         self.um_user_3_delete_btn.setGeometry(int(345 * X_SCALE), int(250 * Y_SCALE), int(60 * X_SCALE),
                                                 int(25 * Y_SCALE))
-        self.um_user_3_delete_btn.setText("Löschen")
+        self.um_user_3_delete_btn.setText("Lï¿½schen")
         self.um_user_3_delete_btn.setStyleSheet(L_BT_N)
 
         self.um_user_4 = QtWidgets.QLabel(self)
@@ -1509,7 +1510,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.um_user_4_delete_btn = QtWidgets.QPushButton(self)
         self.um_user_4_delete_btn.setGeometry(int(480 * X_SCALE), int(250 * Y_SCALE), int(60 * X_SCALE),
                                                 int(25 * Y_SCALE))
-        self.um_user_4_delete_btn.setText("Löschen")
+        self.um_user_4_delete_btn.setText("Lï¿½schen")
         self.um_user_4_delete_btn.setStyleSheet(L_BT_N)
 
         self.um_user_5 = QtWidgets.QLabel(self)
@@ -1543,7 +1544,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.um_user_5_delete_btn = QtWidgets.QPushButton(self)
         self.um_user_5_delete_btn.setGeometry(int(615 * X_SCALE), int(250 * Y_SCALE), int(60 * X_SCALE),
                                                 int(25 * Y_SCALE))
-        self.um_user_5_delete_btn.setText("Löschen")
+        self.um_user_5_delete_btn.setText("Lï¿½schen")
         self.um_user_5_delete_btn.setStyleSheet(L_BT_N)
 
         self.um_user_6 = QtWidgets.QLabel(self)
@@ -1577,7 +1578,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.um_user_6_delete_btn = QtWidgets.QPushButton(self)
         self.um_user_6_delete_btn.setGeometry(int(75 * X_SCALE), int(495 * Y_SCALE), int(60 * X_SCALE),
                                                 int(25 * Y_SCALE))
-        self.um_user_6_delete_btn.setText("Löschen")
+        self.um_user_6_delete_btn.setText("Lï¿½schen")
         self.um_user_6_delete_btn.setStyleSheet(L_BT_N)
 
         self.um_user_7 = QtWidgets.QLabel(self)
@@ -1611,7 +1612,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.um_user_7_delete_btn = QtWidgets.QPushButton(self)
         self.um_user_7_delete_btn.setGeometry(int(210 * X_SCALE), int(495 * Y_SCALE), int(60 * X_SCALE),
                                                 int(25 * Y_SCALE))
-        self.um_user_7_delete_btn.setText("Löschen")
+        self.um_user_7_delete_btn.setText("Lï¿½schen")
         self.um_user_7_delete_btn.setStyleSheet(L_BT_N)
 
         self.um_user_8 = QtWidgets.QLabel(self)
@@ -1645,7 +1646,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.um_user_8_delete_btn = QtWidgets.QPushButton(self)
         self.um_user_8_delete_btn.setGeometry(int(345 * X_SCALE), int(495 * Y_SCALE), int(60 * X_SCALE),
                                                 int(25 * Y_SCALE))
-        self.um_user_8_delete_btn.setText("Löschen")
+        self.um_user_8_delete_btn.setText("Lï¿½schen")
         self.um_user_8_delete_btn.setStyleSheet(L_BT_N)
 
         self.um_user_9 = QtWidgets.QLabel(self)
@@ -1679,7 +1680,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.um_user_9_delete_btn = QtWidgets.QPushButton(self)
         self.um_user_9_delete_btn.setGeometry(int(480 * X_SCALE), int(495 * Y_SCALE), int(60 * X_SCALE),
                                                 int(25 * Y_SCALE))
-        self.um_user_9_delete_btn.setText("Löschen")
+        self.um_user_9_delete_btn.setText("Lï¿½schen")
         self.um_user_9_delete_btn.setStyleSheet(L_BT_N)
 
         self.um_user_10 = QtWidgets.QLabel(self)
@@ -1714,12 +1715,12 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.um_user_10_delete_btn = QtWidgets.QPushButton(self)
         self.um_user_10_delete_btn.setGeometry(int(615 * X_SCALE), int(495 * Y_SCALE), int(60 * X_SCALE),
                                                  int(25 * Y_SCALE))
-        self.um_user_10_delete_btn.setText("Löschen")
+        self.um_user_10_delete_btn.setText("Lï¿½schen")
         self.um_user_10_delete_btn.setStyleSheet(L_BT_N)
 
         self.um_add_btn = QtWidgets.QPushButton(self)
         self.um_add_btn.setGeometry(int(595 * X_SCALE), int(555 * Y_SCALE), int(80 * X_SCALE), int(25 * Y_SCALE))
-        self.um_add_btn.setText("Hinzufügen")
+        self.um_add_btn.setText("Hinzufï¿½gen")
         self.um_add_btn.setStyleSheet(L_BT_N)
 
         self.um_prev_e_btn = QtWidgets.QLabel(self)
@@ -1801,7 +1802,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.ue_pass_value.setStyleSheet(L_ST_VAL)
 
         self.ue_text6 = QtWidgets.QLabel(self)
-        self.ue_text6.setText("Passwort bestätigen")
+        self.ue_text6.setText("Passwort bestï¿½tigen")
         self.ue_text6.setAlignment(QtCore.Qt.AlignRight)
         self.ue_text6.setGeometry(int(150 * X_SCALE), int(300 * Y_SCALE), int(150 * X_SCALE), int(30 * Y_SCALE))
         self.ue_text6.setStyleSheet(L_ST_TEXT)
@@ -2327,7 +2328,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
 
         self.sign_clear_btn = QtWidgets.QPushButton(self)
         self.sign_clear_btn.setGeometry(int(260 * X_SCALE), int(460 * Y_SCALE), int(80 * X_SCALE), int(25 * Y_SCALE))
-        self.sign_clear_btn.setText("Löschen")
+        self.sign_clear_btn.setText("Lï¿½schen")
         self.sign_clear_btn.setStyleSheet(L_BT_N)
 
         self.sign_capture_btn = QtWidgets.QPushButton(self)
@@ -6266,7 +6267,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
 
         self.cp_camera_icon.hide()
 
-    def face_capture(self):
+    def face_capture(self):                 #WT_capture image
         while True:
             ret, image = self.capture_cap.read()
             if not ret:
@@ -6287,7 +6288,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         pix1 = QtGui.QPixmap.fromImage(im1)
         self.pe_person_face.setPixmap(pix1)
 
-    def mrz_recog(self):
+    def mrz_recog(self):                        #WT_id_card recog
         while True:
             ret, image = self.capture_cap.read()
             if not ret:
