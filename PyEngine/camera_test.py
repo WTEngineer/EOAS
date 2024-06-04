@@ -353,6 +353,35 @@ async def get_camera_analytics():
         _, buffer2 = cv2.imencode('.jpg', analytics_data[2][5])
         image_bytes2 = buffer2.tobytes()
         image_base2 = base64.b64encode(image_bytes2).decode('utf-8')
+        face_img = analytics_data[0]
+        face_bytes = cv2.imencode('.jpg', face_img)[1].tobytes()
+        time = analytics_data[1]
+        details = analytics_data[2]
+
+        name = details[1]
+        gender = details[7]
+        age = details[3]
+        place = details[13]
+        view = '0'
+        action = analytics_data[-1]
+
+        # ----  save person to db --------
+        try:
+            conn = sqlite3.connect('database/face_db.db')
+            cursor = conn.cursor()
+            sqlite_insert_blob_query = """ INSERT INTO person_history_table
+                    (name, gender, age, time, place, view, action, photo) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
+
+            # Convert data into tuple format
+            data_tuple = (name, gender, age, time, place, view, action, face_bytes)
+
+            cursor.execute(sqlite_insert_blob_query, data_tuple)
+            id = cursor.lastrowid
+            conn.commit()
+            print("Add new person history successfully.")
+        except sqlite3.Error as error:
+            print("Failed to add new person history.", error)
         person = {
             'id': analytics_data[2][0],
             'name': analytics_data[2][1],
@@ -809,6 +838,30 @@ async def login(request: Request, response: Response):
         conn.commit()
 
         if user:
+            conn = sqlite3.connect('database/face_db.db')
+            cursor = conn.cursor()
+            name = user[1]
+            action = 'Log in'
+            time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            content = ''
+
+            # ----  save person to db --------
+            try:
+                sqlite_insert_blob_query = """ INSERT INTO user_history_table
+                                (name, action, time, content) 
+                                VALUES (?, ?, ?, ?)"""
+
+                # Convert data into tuple format
+                data_tuple = (name, action, time, content)
+                print(data_tuple)
+
+                cursor.execute(sqlite_insert_blob_query, data_tuple)
+                conn.commit()
+                print("Add new person history successfully.")
+
+            except sqlite3.Error as error:
+                print("Failed to add new person history.", error)
+
             response.set_cookie(key="account", value=json.dumps({"username": username}), httponly=True, max_age=3600)
             return JSONResponse(content={"message": "Login successful", "user": {"id": user[0], "name": user[1], "usergroup": user[2], "password": user[3], "creator": user[4], "phone": user[5], 'blocked': user[6], 'permission': 'admin'}})
         else:
