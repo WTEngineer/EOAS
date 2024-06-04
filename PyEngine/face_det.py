@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import mediapipe as mp
+import base64
 
 
 class FaceDetector:
@@ -162,20 +163,27 @@ class FaceDetector:
 
 
 if __name__ == '__main__':
-    # cap = cv2.VideoCapture('sample1.mp4')
+    cap = cv2.VideoCapture('sample1.mp4')
     # print("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww:", "111111111111111111")
-    cap = cv2.VideoCapture(0)
+    #cap = cv2.VideoCapture(0)
     det = FaceDetector()
+    face_count = 0
     while True:
         ret, image = cap.read()
         if not ret:
             break
 
         image, faces = det.detect(image)
+        for face in faces:
+            _, buffer = cv2.imencode('.jpg', image)
+            image_bytes = buffer.tobytes()
+            image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+            print(image_base64)
+        print(faces)
         if image is not None:
             image = cv2.resize(image, (800, 600))
             cv2.imshow("res", image)
-        cv2.waitKey(1)
+        cv2.waitKey(0)
 
 
 

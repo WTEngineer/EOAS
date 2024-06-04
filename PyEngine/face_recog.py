@@ -8,7 +8,8 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class FaceRecognizer:
     def __init__(self):
-        self.model = None
+        self.model = FaceAnalysis(name='analg_face', root='.')
+        self.model.prepare(ctx_id=0, det_thresh=0.5, det_size=(640, 640))
         self.expansion_rate = [0.1, 0.4, 0.1, 0.1]
         self.initialize_model()
 

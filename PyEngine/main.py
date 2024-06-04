@@ -157,10 +157,8 @@ L_ST_VAL = "background-color: rgb(255, 255, 255);" \
             "font: 12pt \"Arial\";" \
 
 
-# spcial_char_map = {ord('�'): 'ae', ord('�'): 'ue', ord('�'): 'oe', ord('�'): 'ss', ord('�'): 'Ae', ord('�'): 'Ue',
-#                    ord('�'): 'Oe'}
-spcial_char_map = {ord(' '): 'ae', ord(' '): 'ue', ord(' '): 'oe', ord(' '): 'ss', ord(' '): 'Ae', ord(' '): 'Ue',
-                   ord(' '): 'Oe'}
+spcial_char_map = {}
+
 
 class FaceRecogSys(QtWidgets.QMainWindow):
     cam1_capture_signal = pyqtSignal()
@@ -2695,7 +2693,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         self.cam1_frame = None
         self.cam1_faces = None
         self.cam1_frame_ori = None
-        self.cap1 = cv2.VideoCapture(self.cam1_id, cv2.CAP_DSHOW)
+        self.cap1 = cv2.VideoCapture(0, cv2.CAP_DSHOW)
         self.cap1.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
         #self.cap1.set(cv2.CAP_PROP_AUTOFOCUS, 0)
         self.cap1.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
@@ -4550,6 +4548,57 @@ class FaceRecogSys(QtWidgets.QMainWindow):
 
         self.hide_sign_view()
 
+    def sign_capture_btn_clicked_with_image(self, image):
+        try:
+            img_name = f'static/images/signature.png'
+            with open(img_name, "wb") as f:
+                f.write(image)
+
+            print('stored')
+            img = Image.new("RGB", (200, 30), (255, 255, 255))
+            draw = ImageDraw.Draw(img)
+            date_text = datetime.now().strftime("%Y-%m-%d")
+            draw.text((10, 10), date_text, fill=(0, 0, 0), font_size=18)
+            img.save('date.jpg')
+
+            src_pdf_filename = 'database/agreements/sample.pdf'
+            dst_pdf_filename = f'static/images/result.pdf'
+
+            sign_img = open(img_name, "rb").read()
+            date_img = open('date.jpg', "rb").read()
+
+            date_rect = fitz.Rect(60, 570, 260, 600)
+            sign_rect = fitz.Rect(50, 600, 300, 700)
+
+            document = fitz.open(src_pdf_filename)
+            page = document[0]
+            if not page.is_wrapped:
+                page.wrap_contents()
+
+            page.insert_image(date_rect, stream=date_img)
+            page.insert_image(sign_rect, stream=sign_img)
+
+            document.save(dst_pdf_filename)
+            document.close()
+            os.remove(img_name)
+            os.remove('date.jpg')
+
+            print("Successfully made pdf file")
+
+            doc = fitz.open(dst_pdf_filename)
+            page = doc.load_page(0)  # number of page
+            pix = page.get_pixmap()
+            output = dst_pdf_filename.replace('pdf', 'jpg')
+            pix.save(output)
+            doc.close()
+
+            # pix = QtGui.QPixmap(output)
+            # self.pe_agree_text.setPixmap(pix)
+        except:
+            print("Error to make agreement pdf with sign.")
+
+        # self.hide_sign_view()
+
     def sign_cancel_btn_clicked(self):
         self.hide_sign_view()
 
@@ -6231,6 +6280,8 @@ class FaceRecogSys(QtWidgets.QMainWindow):
         im4 = QtGui.QImage(converted4.data, converted4.shape[1], converted4.shape[0], QtGui.QImage.Format_RGB888)
         pix4 = QtGui.QPixmap.fromImage(im4)
         self.mo_camera4_view.setPixmap(pix4)
+
+
 
     def calc_age(self, birth_str):
         try:
