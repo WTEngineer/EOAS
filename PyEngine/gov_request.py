@@ -48,23 +48,22 @@ def make_payload(name, surname, birth):
 
 
 def connect_gov(sys_id, firstname, lastname, birth):
+    year = birth[6:]
+    month = birth[3:5]
+    day = birth[:2]
 
-        year = birth[6:]
-        month = birth[3:5]
-        day = birth[:2]
+    birthday = year + '-' + month + '-' + day
+    payload = make_payload(firstname, lastname, birthday)
+    print(payload)
 
-        birthday = year + '-' + month + '-' + day
-        payload = make_payload(firstname, lastname, birthday)
-        print(payload)
-
-        # # load cert info file
-        # file = open('certification/test.json', 'r')
-        # data = json.load(file)
-        #
-        # url = data['url']
-        #
-        # head = make_header(data['user'], data['userpass'])
-        # cert_pass = data['certpass']
+    # # load cert info file
+    # file = open('certification/test.json', 'r')
+    # data = json.load(file)
+    #
+    # url = data['url']
+    #
+    # head = make_header(data['user'], data['userpass'])
+    # cert_pass = data['certpass']
 
         if os.path.exists(ROOT_DIR + '/cert_files/cert_info.bin'):
             info_filepath = ROOT_DIR + '/cert_files/cert_info.bin'

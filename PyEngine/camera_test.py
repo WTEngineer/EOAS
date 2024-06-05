@@ -1,6 +1,7 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Request, Response, Depends, Query
 from fastapi.responses import StreamingResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from flask import Flask, send_from_directory
 import cv2
 import json
 import os
@@ -16,15 +17,22 @@ from mrz_reader import MRZReader
 import math
 import threading
 import queue
+from dotenv import load_dotenv
+import subprocess
 
 app = FastAPI()
 face_detector = FaceDetector()
 face_recognizer = FaceRecognizer()
 mrz_reader = MRZReader()
 
-STATIC_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
+STATIC_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resource')
 camera_analytics_queue = queue.Queue()
 current_camera_action = 'Unknown'
+
+load_dotenv()
+
+# Get the ServerAddress from the environment variables
+server_address = os.getenv('ServerAddress')
 
 # Enable CORS
 app.add_middleware(
@@ -36,8 +44,11 @@ app.add_middleware(
 )
 
 # Initialize cameras
-camera_1 = cv2.VideoCapture('./sample1.mp4')
-camera_2 = cv2.VideoCapture('./01.mp4')
+#WT_use video
+# camera_1 = cv2.VideoCapture('./sample1.mp4')
+# camera_2 = cv2.VideoCapture('./01.mp4')
+camera_1 = cv2.VideoCapture(0)
+camera_2 = cv2.VideoCapture(1)
 person_register_list = []
 connected_websockets = []
 
@@ -59,7 +70,7 @@ def get_user_register_list():
         cv2.imwrite(image_path, face_img)
         
         # Construct the URL for the avatar
-        avatar_url = f"http://localhost:8000/images/{image_filename}"
+        avatar_url = f"http://{server_address}:8000/images/{image_filename}"
 
         face_img = FaceRecogSys.bytes_to_image(FaceRecogSys, row[5])
         emb = FaceRecogSys.bytes_to_emb(FaceRecogSys, row[6])
@@ -105,7 +116,7 @@ def get_user_register_list1():
         cv2.imwrite(image_path, face_img)
         
         # Construct the URL for the avatar
-        avatar_url = f"http://localhost:8000/images/{image_filename}"
+        avatar_url = f"http://{server_address}:8000/images/{image_filename}"
 
         face_img = FaceRecogSys.bytes_to_image(FaceRecogSys, row[5])
         emb = FaceRecogSys.bytes_to_emb(FaceRecogSys, row[6])
@@ -181,7 +192,7 @@ def get_user_history_list(page: int, page_size: int, from_date: str = None, to_d
             cv2.imwrite(image_path, face_img)
         
         # Construct the URL for the avatar
-        avatar_url = f"http://localhost:8000/images/{image_filename}"
+        avatar_url = f"http://{server_address}:8000/images/{image_filename}"
         
         person = {
             'id': row[0],
@@ -491,9 +502,9 @@ async def camera1_stream_available():
 async def camera2_stream():
     return StreamingResponse(generate_frames(camera_2), media_type='multipart/x-mixed-replace; boundary=frame')
 
-# @app.get("/stream2/available")
-# async def camera2_stream_available():
-#     return "ok"
+@app.get("/stream2/available")
+async def camera2_stream_available():
+    return "ok"
 
 # @app.get("/stream3/available")
 # async def camera3_stream_available():
@@ -537,7 +548,7 @@ def get_user_by_id(id):
             cv2.imwrite(image_path, face_img)
         
         # Construct the URL for the avatar
-        avatar_url = f"http://localhost:8000/images/{image_filename}"
+        avatar_url = f"http://{server_address}:8000/images/{image_filename}"
         
         return {
             'id': row[0],
@@ -642,12 +653,12 @@ async def addUser(request: Request):
     pdf_path = f"{name}.pdf"
     real_image_path = os.path.join(STATIC_ROOT, 'images', image_path)
     real_pdf_path = os.path.join(STATIC_ROOT, 'images', pdf_path)
-    if os.path.exists('static/images/result.jpg'):
+    if os.path.exists('resource/images/result.jpg'):
         if os.path.exists(real_image_path):
             os.remove(real_image_path)
             os.remove(real_pdf_path)
-        os.rename('static/images/result.jpg', real_image_path)
-        os.rename('static/images/result.pdf', real_pdf_path)
+        os.rename('resource/images/result.jpg', real_image_path)
+        os.rename('resource/images/result.pdf', real_pdf_path)
     birth = data.get('birth')
     age = data.get('age')
     status = data.get('status')
@@ -656,6 +667,7 @@ async def addUser(request: Request):
     decoded_face = base64.b64decode(encoded)
     face_data = FaceRecogSys.bytes_to_image(FaceRecogSys, decoded_face)
     res = face_recognizer.predict(face_data)
+
     emb = res[0].embedding
     emb_bytes = emb.tobytes()
 
@@ -708,12 +720,12 @@ async def editUser(id: int, request: Request):
     pdf_path = f"{name}.pdf"
     real_image_path = os.path.join(STATIC_ROOT, 'images', image_path)
     real_pdf_path = os.path.join(STATIC_ROOT, 'images', pdf_path)
-    if os.path.exists('static/images/result.jpg'):
+    if os.path.exists('resource/images/result.jpg'):
         if os.path.exists(real_image_path):
             os.remove(real_image_path)
             os.remove(real_pdf_path)
-        os.rename('static/images/result.jpg', real_image_path)
-        os.rename('static/images/result.pdf', real_pdf_path)
+        os.rename('resource/images/result.jpg', real_image_path)
+        os.rename('resource/images/result.pdf', real_pdf_path)
     birth = data.get('birth')
     age = data.get('age')
     status = data.get('status')
@@ -883,7 +895,7 @@ async def signature(request: Request):
     data = base64.b64decode(encoded)
 
     FaceRecogSys.sign_capture_btn_clicked_with_image(FaceRecogSys, data)
-    return JSONResponse(content={"data": "http://localhost:8000/images/result.jpg"})
+    return JSONResponse(content={"data": f"http://{server_address}:8000/images/result.jpg"})
 
 @app.get('/images/{filename}')
 async def serve_image(filename: str):
@@ -894,5 +906,11 @@ async def serve_image(filename: str):
     raise HTTPException(status_code=404, detail="File not found")
 
 if __name__ == "__main__":
+    # Start the first script
+    first_script_process = subprocess.Popen(['python', 'app.py'])
+
     import uvicorn
-    uvicorn.run(app, host="localhost", port=8000)
+    uvicorn.run(app, host=server_address, port=8000)
+
+    first_script_process.wait()
+    

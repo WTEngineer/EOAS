@@ -1,6 +1,6 @@
 <template lang="pug">
 .loader.tw-flex.tw-justify-center.tw-items-center(v-if="showLoader")
-  img(:src="logoSrc" alt="Loading" @load="onLoad" width="200px" style="background-color: rgb(18, 18, 18)")
+  img(:src="logoSrc" alt="Loading" @load="onLoad" width="200px" style="background-color: rgb(17, 17, 17)")
 </template>
 
 <script>
@@ -27,7 +27,7 @@ export default {
       if (this.mode === 'light') {
         return require('../assets/img/light_logo.gif');
       } else {
-        return require('../assets/img/dark_logo.mp4');
+        return require('../assets/img/dark_logo.gif');
       }
     }
   },

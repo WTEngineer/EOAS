@@ -4550,7 +4550,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
 
     def sign_capture_btn_clicked_with_image(self, image):
         try:
-            img_name = f'static/images/signature.png'
+            img_name = f'resource/images/signature.png'
             with open(img_name, "wb") as f:
                 f.write(image)
 
@@ -4562,7 +4562,7 @@ class FaceRecogSys(QtWidgets.QMainWindow):
             img.save('date.jpg')
 
             src_pdf_filename = 'database/agreements/sample.pdf'
-            dst_pdf_filename = f'static/images/result.pdf'
+            dst_pdf_filename = f'resource/images/result.pdf'
 
             sign_img = open(img_name, "rb").read()
             date_img = open('date.jpg', "rb").read()

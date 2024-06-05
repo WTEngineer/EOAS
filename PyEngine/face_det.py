@@ -163,9 +163,8 @@ class FaceDetector:
 
 
 if __name__ == '__main__':
-    cap = cv2.VideoCapture('sample1.mp4')
-    # print("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww:", "111111111111111111")
-    #cap = cv2.VideoCapture(0)
+    # cap = cv2.VideoCapture('sample1.mp4')
+    cap = cv2.VideoCapture(0)
     det = FaceDetector()
     face_count = 0
     while True:
