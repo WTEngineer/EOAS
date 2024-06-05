@@ -24,7 +24,7 @@
         
         v-btn.login-btn.tw-text-white.tw-mt-2(:loading="loading" block depressed color="var(--cui-primary)" height="48px" type="submit") {{ $t('signin') }}
               
-  span.tw-text-xs.text-muted innovium-tech EOAS - v{{ version }}
+  span.tw-text-xs.text-muted INNOVIUM-TECH EOAS - v{{ version }}
 </template>
 
 <script>
@@ -79,9 +79,12 @@ export default {
 
   created() {
     this.loadRestart = this.restarted;
-
     this.moduleName = this.uiConfig?.env?.moduleName || 'EOAS';
     this.version = this.uiConfig.version || version;
+    const currentUser = this.$store.state.auth.user;
+    if (currentUser.id) {
+      this.$router.push('/cameras');
+    }
   },
 
   mounted() {

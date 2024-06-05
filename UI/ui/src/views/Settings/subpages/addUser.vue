@@ -106,7 +106,7 @@
         .tw-px-4
           v-img(:src="sign", alt="Sample Image", width="100%", height="auto", style="border: 1px solid #000;")
           .tw-flex.tw-justify-end
-            v-btn.text-default.tw-mt-2(style="margin-bottom: 20px; background: rgba(var(--cui-bg-default-rgb))" ) {{$t('print')}}
+            v-btn.text-default.tw-mt-2(style="margin-bottom: 20px; margin-right: 280px; background: rgba(var(--cui-bg-default-rgb))" ) {{$t('print')}}
 
 </template>
 
@@ -123,7 +123,7 @@ export default {
         mdiCloseThick,
         mdiClose
       },
-      sign: 'http://localhost:8000/images/sample.jpg',
+      sign: `http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/images/sample.jpg`,
       user: {},
       userId: '',
       oasisQuery: '',
@@ -296,7 +296,7 @@ export default {
       this.startCamera();
       this.IDcardStatus = true;
       this.showCam = true;
-      fetch('http://localhost:8000/id-analytics')
+      fetch(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/id-analytics`)
         .then(response => response.json())
         .then(data => {
           console.log('ID data');
@@ -360,7 +360,7 @@ export default {
     async fetchUserData(id) {
       console.log(id);
       await this.$store.dispatch('users/getUser', id);
-      this.sign = `http://localhost:8000/images/${this.user.name}.jpg`;
+      this.sign = `http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/images/${this.user.name}.jpg`;
     },
     handleErrorImg() {
       // Handle image error

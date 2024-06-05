@@ -24,15 +24,7 @@
 
       v-divider.tw-mb-3.tw-mt-6
 
-    .tw-block.tw-mb-5(v-if="camerasSelect")
-      h4.tw-mb-4 {{ $t('cameras') }}
-
-      v-select.selector(dense small-chips deletable-chips hide-details multiple :no-data-text="$t('no_data_available')" v-model="selectedCameras" item-value="title" item-text="title" :items="availableCameras" label="..." prepend-inner-icon="mdi-security" background-color="var(--cui-bg-card)" solo @change="watchItems")
-        template(v-slot:prepend-inner)
-          v-icon.text-muted {{ icons['mdiCamera'] }}
-
-      v-divider.tw-mb-3.tw-mt-6
-    
+   
     <!-- .tw-block.tw-mb-5(v-if="roomSelect")
       h4.tw-mb-4 {{ $t('rooms') }}
 

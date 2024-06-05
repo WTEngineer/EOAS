@@ -1,7 +1,7 @@
 <template lang="pug">
 v-footer.footer.tw-text-xs.tw-z-0(padless app absolute)
   .footer-wrapper.tw-flex.tw-items-center.tw-justify-end
-    a.footer-link(href="https://github.com/SeydX" target="blank") {{ $t('Innovium-tech EOAS - v1.0.1') }} 
+    a.footer-link(href="https://github.com/SeydX" target="blank") {{ $t('INNOVIUM-TECH EOAS - v1.0.1') }} 
 </template>
 
 <script>

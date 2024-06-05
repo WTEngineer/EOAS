@@ -242,7 +242,135 @@ export const routes = [
     },
     component: () => import('@/views/Settings/subpages/appearance.vue'),
   },
-
+  {
+    path: '/server-management',
+    name: 'Server management',
+    meta: {
+      redirectTo: '/server-management/main',
+      auth: {
+        requiresAuth: true,
+        requiredLevel: [],
+      },
+      config: {
+        fixedNavbar: true,
+        showFooter: true,
+        showNavbar: true,
+        showSidebar: true,
+      },
+      navigation: {
+        main: true,
+        icon: 'mdiCogs',
+      },
+    },
+    component: () => import(/* webpackChunkName: "settings" */ '@/views/Settings/Settings.vue'),
+    children: [
+      {
+        path: 'main',
+        meta: {
+          name: '',
+          child: true,
+          auth: {
+            requiresAuth: true,
+            requiredLevel: [],
+          },
+          config: {
+            fixedNavbar: true,
+            showFooter: true,
+            showNavbar: true,
+            showSidebar: true,
+          },
+          navigation: {
+            icon: 'mdi-account-circle-outline',
+          },
+        },
+        component: () => import(/* webpackChunkName: "settings" */ '@/views/ServerManagement/subpages/Main.vue'),
+      },
+      {
+        path: 'oasisSetting',
+        meta: {
+          name: '',
+          child: true,
+          auth: {
+            requiresAuth: true,
+            requiredLevel: ['settings:general:access', 'settings:general:edit'],
+          },
+          config: {
+            fixedNavbar: true,
+            showFooter: true,
+            showNavbar: true,
+            showSidebar: true,
+          },
+          navigation: {
+            icon: 'mdi-application-cog',
+          },
+        },
+        component: () => import(/* webpackChunkName: "settings" */ '@/views/ServerManagement/subpages/oasisSetting.vue'),
+      },
+      {
+        path: 'freischaltung',
+        meta: {
+          name: '',
+          child: true,
+          auth: {
+            requiresAuth: true,
+            requiredLevel: ['settings:general:access', 'settings:general:edit'],
+          },
+          config: {
+            fixedNavbar: true,
+            showFooter: true,
+            showNavbar: true,
+            showSidebar: true,
+          },
+          navigation: {
+            icon: 'mdi-application-cog',
+          },
+        },
+        component: () => import(/* webpackChunkName: "settings" */ '@/views/ServerManagement/subpages/freischaltung.vue'),
+      },
+      {
+        path: 'abfrage',
+        meta: {
+          name: '',
+          child: true,
+          auth: {
+            requiresAuth: true,
+            requiredLevel: ['settings:general:access', 'settings:general:edit'],
+          },
+          config: {
+            fixedNavbar: true,
+            showFooter: true,
+            showNavbar: true,
+            showSidebar: true,
+          },
+          navigation: {
+            icon: 'mdi-application-cog',
+          },
+        },
+        component: () => import(/* webpackChunkName: "settings" */ '@/views/ServerManagement/subpages/abfrage.vue'),
+      },
+      {
+        path: 'about',
+        meta: {
+          name: '',
+          child: true,
+          auth: {
+            requiresAuth: true,
+            requiredLevel: ['settings:general:access', 'settings:general:edit'],
+          },
+          config: {
+            fixedNavbar: true,
+            showFooter: true,
+            showNavbar: true,
+            showSidebar: true,
+          },
+          navigation: {
+            icon: 'mdi-application-cog',
+          },
+        },
+        component: () => import(/* webpackChunkName: "settings" */ '@/views/ServerManagement/subpages/about.vue'),
+      },
+    ],
+  },
   // {
   //   path: '/notifications',
   //   name: 'Notifications',

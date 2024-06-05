@@ -1,6 +1,6 @@
 <template lang="pug">
 .loader.tw-flex.tw-justify-center.tw-items-center(v-if="showLoader")
-  img(:src="logoSrc" alt="Loading" @load="onLoad" width="200px" style="background-color: rgb(17, 17, 17)")
+  img(:src="logoSrc" alt="Loading" @load="onLoad" width="200px" )
 </template>
 
 <script>
@@ -16,8 +16,8 @@ export default {
   data() {
     return {
       showLoader: true,
-      isLoaded: false,
-      startTime: null,
+      // isLoaded: false,
+      // startTime: null,
       mode: 'light',
     };
   },

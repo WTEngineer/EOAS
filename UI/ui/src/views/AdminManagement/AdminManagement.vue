@@ -12,7 +12,7 @@
   .tw-mx-auto.tw-w-full.tw-py-5.tw-flex.tw-justify-between
     .tw-w-full.tw-flex.tw-flex-wrap.tw-justify-start.tw-flex-start
       v-row.tw-w-full
-        v-col.tw-px-2.tw-py-2.tw-px-8(cols="3" v-for="user in users" :key="user.id")
+        v-col.tw-px-2.tw-py-2.tw-px-8(cols="4" v-for="user in users" :key="user.id")
           .tw-bg-white.tw-shadow.tw-rounded-lg.tw-overflow-hidden.tw-mx-2.tw-my-4.tw-max-w-xs
             .tw-w-full.tw-text-center.tw-mb-4
               v-avatar.tw-mt-5(size="120" color="#121212")

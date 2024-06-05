@@ -12,7 +12,7 @@
             .tw-bg-white.tw-shadow.tw-rounded-lg.tw-overflow-hidden.tw-mx-2.tw-my-4.tw-max-w-xs(style="padding: 0 20px")
               .tw-w-full.tw-text-center.tw-mb-4
                 v-avatar.tw-mt-5(size="120" color="#121212")
-                  v-img(v-on:error="handleErrorImg" :src="user.avatar? user.avatar: 'http://localhost:8000/images/camera.png'" :alt="user.name" style="border: 1px solid #1a1a1a")
+                  v-img(v-on:error="handleErrorImg" :src="user.avatar? user.avatar: `http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/images/camera.png`" :alt="user.name" style="border: 1px solid #1a1a1a")
                     template(v-slot:placeholder)
                       .tw-flex.tw-justify-center.tw-items-center.tw-h-full
                         v-progress-circular(indeterminate color="var(--cui-primary)" size="22")
@@ -233,7 +233,7 @@ export default {
       }
     },
     handleErrorImg() {
-      this.user.avatar = 'http://localhost:8000/images/camera.png'
+      this.user.avatar = `http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/images/camera.png`
       // Handle image error
     },
     changeListView(view) {
