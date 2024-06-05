@@ -65,60 +65,78 @@ def connect_gov(sys_id, firstname, lastname, birth):
     # head = make_header(data['user'], data['userpass'])
     # cert_pass = data['certpass']
 
-        if os.path.exists(ROOT_DIR + '/cert_files/cert_info.bin'):
-            info_filepath = ROOT_DIR + '/cert_files/cert_info.bin'
-            cert_filepath = ROOT_DIR + '/cert_files/cert_file.p12'
-        else:
-            info_filepath = ROOT_DIR + '/cert_files/test.bin'
-            cert_filepath = ROOT_DIR + '/cert_files/test.p12'
-        #origin data
-        # file = open(info_filepath, 'rb')
-        # data = file.read()
-        # decrypted_data = fernet.decrypt(data).decode()
+    if os.path.exists(ROOT_DIR + '/cert_files/cert_info.bin'):
+        info_filepath = ROOT_DIR + '/cert_files/cert_info.bin'
+        cert_filepath = ROOT_DIR + '/cert_files/cert_file.p12'
+    else:
+        info_filepath = ROOT_DIR + '/cert_files/test.bin'
+        cert_filepath = ROOT_DIR + '/cert_files/test.p12'
 
-        #WT_except handle
-        try:
-            with open(info_filepath, 'rb') as file:
-                data = file.read()
-        except FileNotFoundError as e:
-            print(f"Error: {e}")
-            return "Certificate information file not found"
-        except Exception as e:
-            print(f"Error reading file: {e}")
-            return "Error reading certificate information file"
+    file = open(info_filepath, 'rb')
+    data = file.read()
+    decrypted_data = fernet.decrypt(data).decode()
+    data_list = decrypted_data.split('***')
+    url = data_list[0]
+    user = data_list[1]
+    userpass = data_list[2]
+    cert_pass = data_list[3]
 
-        try:
-            fernet = Fernet(fernet_key)
-            decrypted_data = fernet.decrypt(data).decode()
-        except Exception as e:
-            print(f"Error decrypting data: {e}")
-            return "Error decrypting certificate information"
+    head = make_header(user, userpass)
 
-        data_list = decrypted_data.split('***')
-        url = data_list[0]
-        user = data_list[1]
-        userpass = data_list[2]
-        cert_pass = data_list[3]
+    print("--- Ready to send request ---")
 
-        head = make_header(user, userpass)
+    Resp = post(url, data= payload, headers=head , pkcs12_filename=cert_filepath, pkcs12_password=cert_pass, verify=True) # If you need a response package To verify, you need to pass the verification
+    # print (Resp.text)
 
-        print("--- Ready to send request ---")
+    text = Resp.text
+    tem = text.split('<MELDUNG>')[1]
+    res = tem.split('</MELDUNG>')[0]
+    print(res)
 
-        # Send request
-        try:
-            Resp = post(url, data= payload, headers=head , pkcs12_filename=cert_filepath, pkcs12_password=cert_pass, verify=True) # If you need a response package To verify, you need to pass the verification
-            Resp.raise_for_status() 
+    return res
+    
+    # try:
+    #     with open(info_filepath, 'rb') as file:
+    #         data = file.read()
+    # except FileNotFoundError as e:
+    #     print(f"Error: {e}")
+    #     return "Certificate information file not found"
+    # except Exception as e:
+    #     print(f"Error reading file: {e}")
+    #     return "Error reading certificate information file"
 
-            text = Resp.text
-            tem = text.split('<MELDUNG>')[1]
-            res = tem.split('</MELDUNG>')[0]
+    # try:
+    #     fernet = Fernet(fernet_key)
+    #     decrypted_data = fernet.decrypt(data).decode()
+    # except Exception as e:
+    #     print(f"Error decrypting data: {e}")
+    #     return "Error decrypting certificate information"
 
-            print(res)
-            return res
+    # data_list = decrypted_data.split('***')
+    # url = data_list[0]
+    # user = data_list[1]
+    # userpass = data_list[2]
+    # cert_pass = data_list[3]
 
-        except IndexError as e:
-            print(f"Error processing response: {e}")
-            return "Error processing response"       
+    # head = make_header(user, userpass)
+
+    # print("--- Ready to send request ---")
+
+    #     # Send request
+    #     try:
+    #         Resp = post(url, data= payload, headers=head , pkcs12_filename=cert_filepath, pkcs12_password=cert_pass, verify=True) # If you need a response package To verify, you need to pass the verification
+    #         Resp.raise_for_status() 
+
+    # text = Resp.text
+    # tem = text.split('<MELDUNG>')[1]
+    # res = tem.split('</MELDUNG>')[0]
+    # print(res)
+
+    # return res
+
+    #     except IndexError as e:
+    #         print(f"Error processing response: {e}")
+    #         return "Error processing response"       
 
 if __name__ == '__main__':
     firstname = 'Ismail'
