@@ -2212,6 +2212,7 @@ class AdminWindow(QtWidgets.QWidget):
         self.machinesetting_10_ip_value.setText(config.get("machine", "GSG-10-IP"))
         self.machinesetting_11_ip_value.setText(config.get("machine", "GSG-11-IP"))
         self.machinesetting_12_ip_value.setText(config.get("machine", "GSG-12-IP"))
+        
         self.machinesetting_pass_value.setText(config.get("machine", "VDAI-Pass"))
 
         self.machinesetting_1_text.show()
@@ -2755,6 +2756,7 @@ class AdminWindow(QtWidgets.QWidget):
 
     def get_cert_browse_button_press_event(self, event):
         self.cert_browse_button.setStyleSheet(BUTTON_PRESS_STYLE)
+
 
     def get_cert_browse_button_release_event(self, event):
         self.cert_browse_button.setStyleSheet(BUTTON_RELEASE_STYLE)

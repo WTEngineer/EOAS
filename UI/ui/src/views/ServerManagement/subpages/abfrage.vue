@@ -1,34 +1,45 @@
 <template>
   <div class="tw-w-full tw-mt-8 tw-pr-20">
+    <div class="tw-flex tw-justify-center">
+        <div class="tw-block">
+          <div class="page-subtitle" >{{ $t('Ausweis/Reisepass durch') }}</div>
+          <div class="page-subtitle" >{{ $t('hineindruecken einscannen.') }}</div>
+        </div>
+    </div>
+
+
     <div>
       <label class="form-input-label">Full name:</label>
-      <v-text-field v-model="user.name" solo
-        :style="{ backgroundColor: 'var(--cui-bg-card)', color: 'var(--cui-text-default)' }">
-      </v-text-field>
+      <v-text-field v-model="user.name" solo></v-text-field>
     </div>
 
     <div class="tw-flex">
       <div class="tw-w-1-3 tw-mr-2">
         <label class="form-input-label">Birthday:</label>
-        <v-text-field v-model="user.birth" solo
-          :style="{ backgroundColor: 'var(--cui-bg-card)', color: 'var(--cui-text-default)' }">
+        <v-text-field v-model="user.birth" solo>
         </v-text-field>
       </div>
 
       <div class="tw-w-1-3 tw-mr-2">
         <label class="form-input-label">Age:</label>
-        <v-text-field v-model="user.age" solo
-          :style="{ backgroundColor: 'var(--cui-bg-card)', color: 'var(--cui-text-default)' }">
+        <v-text-field v-model="user.age" solo disabled>
         </v-text-field>
       </div>
 
       <div class="tw-w-1-3">
         <label class="form-input-label">Status:</label>
-        <v-text-field v-model="user.status" solo disabled
-          :style="{ backgroundColor: 'var(--cui-bg-card)', color: 'var(--cui-text-default)' }">
+        <v-text-field v-model="user.status" solo disabled>
         </v-text-field>
       </div>
     </div>
+
+    <div class="tw-w-full tw-mt-8" style="display: flex; justify-content: center; align-items: center;">
+      <div class="tw-w-1-3" style="display: flex; justify-content: space-evenly;">
+        <v-btn class="tw-mx-2 custom-button" @click="triggerOk">{{ $t('Ok') }}</v-btn>
+        <v-btn class="tw-mx-2 custom-button" @click="() => {$router.push('/server-management/main') }">{{ $t('Cancel') }}</v-btn>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -147,6 +158,18 @@ export default {
       const top = window.pageYOffset || e.target.scrollTop || 0;
       this.fabAbove = top > 20;
     },
+    async triggerOk() {
+      // await axios.get
+      // const data = {
+      //   'url': 'https://oasis.hessen.de/oasisws/spielerstatus',
+      //   'kennung': '',
+      //   'pass1': '',
+      //   'pass2': '',
+      //   'certFilePath': '',
+      // }
+      // await axios.post(url, data)
+      this.$router.push('/server-management/main');
+    },
     reset() {
       this.form = { ...this.currentUser };
     },
@@ -227,7 +250,7 @@ export default {
 }
 
 .tw-mr-2 {
-  margin-right: 0.5rem;
+  margin-right: .5rem;
 }
 
 .form-input-label {

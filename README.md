@@ -1,4 +1,5 @@
-Install python-3.11.6-amd64
-Loading the Python project
-Insert command "pip install requirements.txt"
-To run python project "python camera_test.py"
+- Install python-3.11.6-amd64
+- "python -m venv myenv"
+- "myenv\Scripts\activate"
+- "pip install -r requirements.txt"
+- "python camera_test.py"

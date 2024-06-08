@@ -16,7 +16,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/404.f02769ca.css"
   },
   {
-    "revision": "99fd7dbb87a6949a6251",
+    "revision": "a549c673f1178c46c556",
     "url": "/css/app.4db9b0b8.css"
   },
   {
@@ -24,8 +24,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/camera.021f6342.css"
   },
   {
-    "revision": "e5acfcfe3b81bbd068eb",
-    "url": "/css/cameras.ccc3bc0d.css"
+    "revision": "12b60f7c1461aa197c77",
+    "url": "/css/cameras.2ad10560.css"
   },
   {
     "revision": "8daec0b4be02329d296a",
@@ -84,15 +84,15 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/recordings.fb20a441.css"
   },
   {
-    "revision": "640f8e1500e95bb11b22",
-    "url": "/css/settings.95a3c106.css"
+    "revision": "c6cf8a5ac4e0937b2ac4",
+    "url": "/css/settings.892619ee.css"
   },
   {
     "revision": "cbdcc60a577c39086167",
     "url": "/css/start.f53c8595.css"
   },
   {
-    "revision": "a370683371d0884eb731",
+    "revision": "c2e0420702dd7e10e1ab",
     "url": "/css/utilization.2b747a23.css"
   },
   {
@@ -340,7 +340,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/img/web/logo.png"
   },
   {
-    "revision": "88004da796d45a6c372e3af5bd7715e0",
+    "revision": "2d1cd6d0778ca243a9538229976b778b",
     "url": "/index.html"
   },
   {
@@ -348,8 +348,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/404.5e861814.js"
   },
   {
-    "revision": "99fd7dbb87a6949a6251",
-    "url": "/js/app.dcde4bc8.js"
+    "revision": "a549c673f1178c46c556",
+    "url": "/js/app.dce13bac.js"
   },
   {
     "revision": "3426df851d3cdf5e2e51",
@@ -360,8 +360,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/cameraFeed.2a89b91f.js"
   },
   {
-    "revision": "e5acfcfe3b81bbd068eb",
-    "url": "/js/cameras.c1357375.js"
+    "revision": "12b60f7c1461aa197c77",
+    "url": "/js/cameras.351a2a73.js"
   },
   {
     "revision": "8daec0b4be02329d296a",
@@ -420,16 +420,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/recordings.b2e202b7.js"
   },
   {
-    "revision": "640f8e1500e95bb11b22",
-    "url": "/js/settings.aa0b71b2.js"
+    "revision": "c6cf8a5ac4e0937b2ac4",
+    "url": "/js/settings.aef8a255.js"
   },
   {
     "revision": "cbdcc60a577c39086167",
     "url": "/js/start.39ef4c58.js"
   },
   {
-    "revision": "a370683371d0884eb731",
-    "url": "/js/utilization.c4e4b59a.js"
+    "revision": "c2e0420702dd7e10e1ab",
+    "url": "/js/utilization.d61e9663.js"
   },
   {
     "revision": "161b1861f0f1703f252b94845c270cfd",

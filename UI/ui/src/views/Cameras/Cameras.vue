@@ -131,8 +131,12 @@ export default {
     // await this.checkStreamAvailability(`${this.streamSrc3}/available`, 'streamAvailable3');
     // await this.checkStreamAvailability(`${this.streamSrc4}/available`, 'streamAvailable4');
   },
-  beforeDestroy() {
+  async beforeDestroy() {
     if (this.intervalId) {
+      await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/camera/camera_1/off`);
+      await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/camera/camera_2/off`);
+      // await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/camera/camera_3/off`);
+      // await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/camera/camera_4/off`);
       clearInterval(this.intervalId);
     }
   },

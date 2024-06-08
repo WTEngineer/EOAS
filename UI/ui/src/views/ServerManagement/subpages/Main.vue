@@ -29,7 +29,6 @@ export default {
   methods: {
     navigate(button) {
       if (button === 'Oasis Settings') {
-        console.log('aaaaaaaaaa');
         this.$router.push('/server-management/oasisSetting');
       }
       else if (button == 'Freischaltung') {
@@ -41,6 +40,10 @@ export default {
       else if (button == 'About') {
         this.$router.push('/server-management/about');
       }
+      else if (button == 'Machines') {
+        this.$router.push('/server-management/machine');
+      }
+
       // Add more conditions here if you have more buttons that should navigate to different components
     },
   },

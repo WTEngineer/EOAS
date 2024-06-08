@@ -4,94 +4,47 @@
       color="var(--cui-primary)"></v-progress-linear>
 
     <div v-if="!loading" class="tw-mb-7 tw-mt-5">
-      <div class="tw-flex tw-justify-between">
+      <div class="tw-flex tw-justify-center">
         <div class="tw-block">
-          <div class="page-subtitle">{{ $t('About The Application') }}</div>
+          <div class="page-subtitle">{{ $t('Wählen Sie ihr Gerät') }}</div>
+          <!-- <div class="page-subtitle">{{ $t('Geschafft! Nach wählen des Geräts\nerscheint Ihr Freischaltungscode.') }}</div> -->
+        </div>
+      </div>
+
+      <div class="tw-flex tw-justify-center">
+        <div class="tw-block">
+          <div class="page-subtitle">{{ $t('Geschafft! Nach wählen des Geräts erscheint Ihr Freischaltungscode.') }}</div>
+        </div>
+      </div>
+
+      <div class="tw-w-full tw-mt-8" button-container>
+        <div class="tw-w-1-3 button-wrapper">
+          <v-btn class="tw-mx-2 custom-button" style="height: 200px; width: 250px;">{{ $t('Vorschau') }}</v-btn>
+          <v-btn class="tw-mx-2 custom-button" style="height: 200px; width: 250px;">{{ $t('Nächste') }}</v-btn>
+        </div>
+      </div>
+
+      <div class="tw-flex tw-justify-center">
+        <div class="tw-block">
+          <div class="page-subtitle">{{ $t('Code zum freischalten des Geräte') }}</div>
         </div>
       </div>
 
       <div class="tw-w-full tw-mt-4 tw-mb-8" style="padding: 10px 10px">
         <div class="tw-w-full" style="display: flex; justify-content: center; align-items: center;">
-          <div class="tw-w-4-1" style="text-align: right">
-            <label class="form-input-label">{{ $t('Name') }}</label>
-          </div>
-          <div class="tw-w-4-3" style="text-align: left; padding-left: 30px">
-            <v-text-field v-model="name" :label="$t('')" 
-              style="max-width: 600px; height: 60px" background-color="var(--cui-bg-card)"
-              color="var(--cui-text-default)" disabled solo>
-            </v-text-field>
-          </div>
+          <v-text-field v-model="form.username" :label="$t('')" style="max-width: 600px; height: 60px"
+            background-color="var(--cui-bg-card)" color="var(--cui-text-default)" required solo>
+          </v-text-field>
         </div>
-
-        <div class="tw-w-full" style="display: flex; justify-content: center; align-items: center;">
-          <div class="tw-w-4-1" style="text-align: right">
-            <label class="form-input-label">{{ $t('MAC Address') }}</label>
-          </div>
-          <div class="tw-w-4-3" style="text-align: left; padding-left: 30px">
-            <v-text-field v-model="macAddress" :label="$t('')" 
-              style="max-width: 600px; height: 60px" background-color="var(--cui-bg-card)"
-              color="var(--cui-text-default)" disabled solo>
-            </v-text-field>
-          </div>
-        </div>
-
-        <div class="tw-w-full" style="display: flex; justify-content: center; align-items: center;">
-          <div class="tw-w-4-1" style="text-align: right">
-            <label class="form-input-label">{{ $t('Serial') }}</label>
-          </div>
-          <div class="tw-w-4-3"
-            style="text-align: left; padding-left: 30px; display: flex; justify-content: space-between; align-items: center">
-            <div class="tw-w-4-3">
-              <v-text-field v-model="serial" :label="$t('56168')" 
-                style="max-width: 600px; height: 60px" background-color="var(--cui-bg-card)"
-                color="var(--cui-text-default)" disabled solo>
-              </v-text-field>
-            </div>
-          </div>
-        </div>
-
-        <div class="tw-w-full" style="display: flex; justify-content: center; align-items: center;">
-          <div class="tw-w-4-1" style="text-align: right">
-            <label class="form-input-label">{{ $t('Total Requests') }}</label>
-          </div>
-          <div class="tw-w-4-3" style="text-align: left; padding-left: 30px">
-            <v-text-field v-model="totalRequests" :label="$t('2')" 
-              style="max-width: 600px; height: 60px" background-color="var(--cui-bg-card)"
-              color="var(--cui-text-default)" disabled solo>
-            </v-text-field>
-          </div>
-        </div>
-
-        <div class="tw-w-full" style="display: flex; justify-content: center; align-items: center;">
-          <div class="tw-w-4-1" style="text-align: right">
-            <label class="form-input-label">{{ $t('Allow Requests') }}</label>
-          </div>
-          <div class="tw-w-4-3" style="text-align: left; padding-left: 30px">
-            <v-text-field v-model="allowRequests" :label="$t('13')" 
-              style="max-width: 600px; height: 60px" background-color="var(--cui-bg-card)"
-              color="var(--cui-text-default)" disabled solo>
-            </v-text-field>
-          </div>
-        </div>
-
-        <div class="tw-w-full" style="display: flex; justify-content: center; align-items: center;">
-          <div class="tw-w-4-1" style="text-align: right">
-            <label class="form-input-label">{{ $t('NAllow Requests') }}</label>
-          </div>
-          <div class="tw-w-4-3" style="text-align: left; padding-left: 30px">
-            <v-text-field v-model="nallowRequests" :label="$t('213')" 
-              style="max-width: 600px; height: 60px" background-color="var(--cui-bg-card)"
-              color="var(--cui-text-default)" disabled solo>
-            </v-text-field>
-          </div>
-        </div>
-
       </div>
+
     </div>
 
     <div class="tw-w-full tw-mt-8" style="display: flex; justify-content: center; align-items: center;">
       <div class="tw-w-1-3" style="display: flex; justify-content: space-evenly;">
-        <v-btn class="tw-mx-2 custom-button" @click="() => {$router.push('/server-management/main') }">{{ $t('Cancel') }}</v-btn>
+        <v-btn class="tw-mx-2 custom-button" @click="triggerOk">{{ $t('HILEF') }}</v-btn>
+        <v-btn class="tw-mx-2 custom-button" @click="() => { $router.push('/server-management/main') }">{{
+          $t('ABBRUCH') }}</v-btn>
       </div>
     </div>
 
@@ -100,7 +53,6 @@
 
 <script>
 import { mdiAccount, mdiCheckBold, mdiCloseThick, mdiEye, mdiEyeOff, mdiBlockHelper, mdiCreation, mdiKeyVariant, mdiTimelapse, mdiAccountGroup, mdiCellphoneBasic } from '@mdi/js';
-import axios from 'axios';
 
 
 export default {
@@ -142,13 +94,6 @@ export default {
         newpassword2: [],
       },
 
-      name: 'Oasis Premium v.2.01',
-      macAddress: '',
-      serial: '',
-      totalRequests: '',
-      allowRequests: '',
-      nallowRequests: '',
-
       groupSelect: [this.$t('Administrator'), this.$t('Cofounder')],
       blockSelect: [this.$t('Yes'), this.$t('No')],
       selectedGroup: '',
@@ -184,13 +129,10 @@ export default {
     },
   },
 
-  async created() {
+  created() {
     console.log('aa');
     console.log(this.$route.params);
     this.userId = this.$route.params.id;
-
-    await this.getAboutInfo();
-
     if (this.$route.params.id) {
       this.getUserById(this.$route.params.id);
     }
@@ -209,16 +151,6 @@ export default {
     async getUserById(id) {
       await this.$store.dispatch('users/getAdmin', id);
     },
-
-    async getAboutInfo() {
-      const res = await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/server-management/about`);
-      this.macAddress = res.mac_addr;
-      this.serial = res.serial_str;
-      this.totalRequests = res.total_requests;
-      this.allowRequests = res.allow_requests;
-      this.nallowRequests = res.nallow_requests;
-    },
-
     onScroll(e) {
       if (typeof window === 'undefined') {
         this.fabAbove = true;
@@ -227,6 +159,18 @@ export default {
 
       const top = window.pageYOffset || e.target.scrollTop || 0;
       this.fabAbove = top > 20;
+    },
+    async triggerOk() {
+      // await axios.get
+      // const data = {
+      //   'url': 'https://oasis.hessen.de/oasisws/spielerstatus',
+      //   'kennung': '',
+      //   'pass1': '',
+      //   'pass2': '',
+      //   'certFilePath': '',
+      // }
+      // await axios.post(url, data)
+      this.$router.push('/server-management/main');
     },
     reset() {
       this.form = { ...this.currentUser };
@@ -287,6 +231,31 @@ export default {
   cursor: pointer;
 }
 
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  /* Adjust padding as needed */
+}
+
+.button-left,
+.button-right {
+  display: flex;
+}
+
 .custom-button {
   width: 200px;
   background-color: green !important;
@@ -339,5 +308,17 @@ export default {
 
 .tw-w-4-3 {
   width: 75%;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+img {
+  width: 50px;
+  /* Adjust the size as needed */
+  height: auto;
 }
 </style>

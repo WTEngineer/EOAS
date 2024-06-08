@@ -19,6 +19,8 @@ import threading
 import queue
 from dotenv import load_dotenv
 import subprocess
+import uuid
+import configparser
 
 app = FastAPI()
 face_detector = FaceDetector()
@@ -27,6 +29,7 @@ mrz_reader = MRZReader()
 
 STATIC_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resource')
 camera_analytics_queue = queue.Queue()
+id_analytics_queue = queue.Queue()
 current_camera_action = 'Unknown'
 
 load_dotenv()
@@ -47,10 +50,69 @@ app.add_middleware(
 #WT_use video
 # camera_1 = cv2.VideoCapture('./sample1.mp4')
 # camera_2 = cv2.VideoCapture('./01.mp4')
-camera_1 = cv2.VideoCapture(0)
-camera_2 = cv2.VideoCapture(1)
+paramFile = "config.ini"
+config_params = configparser.ConfigParser()
+config_params.read(paramFile)
+
+capture_cam_id = config_params.getint("camera", "came_capturing")
+camera_1 = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+camera_1.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+camera_1.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+camera_1.set(cv2.CAP_PROP_FPS, 30)
+
+cam1_id = config_params.getint("camera", "came_entrance")
+camera_2 = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+camera_2.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+camera_2.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+camera_2.set(cv2.CAP_PROP_FPS, 30)
+
+cam2_id = config_params.getint("camera", "came_exit")
+camera_3 = cv2.VideoCapture(2, cv2.CAP_DSHOW)
+camera_3.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+camera_3.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+camera_3.set(cv2.CAP_PROP_FPS, 30)
+
 person_register_list = []
 connected_websockets = []
+
+camera_state = {
+    'camera_1': True,
+    'camera_2': True,
+}
+
+# Function to release the camera
+def release_camera(camera_name):
+    print(camera_name)
+    if camera_name == 'camera_1' and camera_1.isOpened():
+        camera_1.release()
+        camera_state['camera_1'] = False
+        print("Camera 1 turned off")
+    elif camera_name == 'camera_2' and camera_2.isOpened():
+        camera_2.release()
+        camera_state['camera_2'] = False
+        print("Camera 2 turned off")
+    else:
+        print(f"{camera_name} is already off or doesn't exist")
+
+# API endpoint to turn off the camera
+@app.get("/api/camera/{camera_name}/off")
+async def turn_off_camera(camera_name: str):
+    print(camera_name)
+    if camera_name not in camera_state:
+        raise HTTPException(status_code=404, detail=f"Camera {camera_name} not found")
+    
+    if camera_state[camera_name]:
+        release_camera(camera_name)
+        return {"status": "success", "message": f"{camera_name} turned off successfully"}
+    else:
+        return {"status": "success", "message": f"{camera_name} is already turned off"}
+
+def get_mac_info():
+    mac_num = hex(uuid.getnode()).replace('0x', '').upper()
+    mac_addr = '-'.join(mac_num[i: i + 2] for i in range(0, 11, 2))
+    mac_str = str(uuid.getnode())
+    serial_str = mac_str[-8:]
+    return mac_addr, serial_str
 
 def get_user_register_list():
     conn = sqlite3.connect('database/face_db.db')
@@ -321,28 +383,32 @@ def proc_detected_faces(faces):
 
 def generate_frames(camera):
     while True:
-        camera.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
-        camera.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
-        camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
+        # camera.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
+        # camera.set(cv2.CAP_PROP_FRAME_WIDTH, 500)
+        # camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 400)
+        # camera.set(cv2.CAP_PROP_FPS, 25)
         success, frame = camera.read()
         if not success:
             camera.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Restart the video
             continue
         else:
-            img, faces = face_detector.detect(frame)
-            ret, buffer = cv2.imencode('.jpg', img)
+            # img, faces = face_detector.detect(frame)
+            threading.Thread(target=process_camera_analytics, args=(frame,)).start()
+            ret, buffer = cv2.imencode('.jpg', frame)
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-            threading.Thread(target=process_camera_analytics, args=(faces,)).start()
+           
+            
             # cam_frame = img.copy()
             # cam_faces = faces.copy()
             # if len(proc_detected_faces(cam_faces)) > 0:
             #     camera_analytics_data = proc_detected_faces(cam_faces)
             #     print(proc_detected_faces(cam_faces))
 
-def process_camera_analytics(faces):
+def process_camera_analytics(frame):
     # Process detected faces
+    img, faces = face_detector.detect(frame)
     analytics_data = proc_detected_faces(faces)
     if len(analytics_data) > 0:
 
@@ -432,51 +498,66 @@ def calc_age(birth_str):
 
 def id_detector(camera):
      while True:
-        camera.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
-        camera.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
-        camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
+        # camera.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
+        # camera.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
+        # camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
         success, frame = camera.read()
         if not success:
             camera.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Restart the video
             continue
         else:
-            mrz = mrz_reader.read_mrz(frame)
-            if mrz is not None:
-                try:
-                    birth_date = mrz['date_of_birth']
-                    year = int(birth_date[:2])
+            threading.Thread(target=process_id_analytics, args=(frame, camera, )).start()
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-                    # birth_date = mrz['date_of_birth']
-                    # year = int(birth_date[:2])
+def process_id_analytics(frame, camera):
+    mrz = mrz_reader.read_mrz(frame)
+    if mrz is not None:
+        try:
+            birth_date = mrz['date_of_birth']
+            year = int(birth_date[:2])
 
-                    today = datetime.today()
-                    current_year = int(str(today.year)[2:])
+            # birth_date = mrz['date_of_birth']
+            # year = int(birth_date[:2])
 
-                    if year > current_year:
-                        birth_year = 1900 + year
-                    else:
-                        birth_year = 2000 + year
+            today = datetime.today()
+            current_year = int(str(today.year)[2:])
 
-                    card_birth = birth_date[4:] + '.' + birth_date[2:4] + '.' + str(birth_year)
-                    # expire_date = mrz['date_of_expire']
-                    real_age = calc_age(card_birth)
-                    card_firstname = mrz['first_name'].translate(spcial_char_map)
-                    card_lastname = mrz['last_name'].translate(spcial_char_map)
-                    return {
-                        'name': card_firstname + ' ' +  card_lastname,
-                        'birth': card_birth,
-                        'age': real_age,
-                    }
+            if year > current_year:
+                birth_year = 1900 + year
+            else:
+                birth_year = 2000 + year
 
-                except ValueError:
-                    pass
+            card_birth = birth_date[4:] + '.' + birth_date[2:4] + '.' + str(birth_year)
+            # expire_date = mrz['date_of_expire']
+            real_age = calc_age(card_birth)
+            card_firstname = mrz['first_name'].translate(spcial_char_map)
+            card_lastname = mrz['last_name'].translate(spcial_char_map)
+            release_camera(camera)
+            id_analytics_queue.put({
+                'name': card_firstname + ' ' +  card_lastname,
+                'birth': card_birth,
+                'age': real_age,
+            })
 
+        except ValueError:
+            pass
+
+
+@app.get("/id-analytics/stream")
+async def get_id_analytics_stream():
+    camera_1 = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    camera_state['camera_1'] = True
+    return StreamingResponse(id_detector(camera_1), media_type='multipart/x-mixed-replace; boundary=frame')
 
 @app.get("/id-analytics")
 async def get_id_analytics():
-    user_data = id_detector(camera_1)
-    return JSONResponse(content=user_data)
-
+    if not id_analytics_queue.empty():
+        analytics_data = id_analytics_queue.get()
+        return JSONResponse(content=analytics_data)
+    return JSONResponse(content={"message": "No analytics data available"})
 
 # @app.websocket("/ws/camera-analytics")
 # async def websocket_endpoint(websocket: WebSocket):
@@ -492,6 +573,8 @@ async def get_id_analytics():
 
 @app.get("/stream1")
 async def camera1_stream():
+    camera_1 = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    camera_state['camera_1'] = True
     return StreamingResponse(generate_frames(camera_1), media_type='multipart/x-mixed-replace; boundary=frame')
 
 @app.get("/stream1/available")
@@ -500,15 +583,21 @@ async def camera1_stream_available():
 
 @app.get("/stream2")
 async def camera2_stream():
+    camera_2 = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    camera_state['camera_2'] = False
     return StreamingResponse(generate_frames(camera_2), media_type='multipart/x-mixed-replace; boundary=frame')
 
 @app.get("/stream2/available")
 async def camera2_stream_available():
     return "ok"
 
+# @app.get("/stream3")
+# async def camera3_stream():
+#     return StreamingResponse(generate_frames(camera_3), media_type='multipart/x-mixed-replace; boundary=frame')
+
 # @app.get("/stream3/available")
 # async def camera3_stream_available():
-#     return "false"
+#     return "ok"
 
 # @app.get("/stream4/available")
 # async def camera4_stream_available():
@@ -667,6 +756,9 @@ async def addUser(request: Request):
     decoded_face = base64.b64decode(encoded)
     face_data = FaceRecogSys.bytes_to_image(FaceRecogSys, decoded_face)
     res = face_recognizer.predict(face_data)
+    #WT
+    # if res == None:
+    #     return JSONResponse(content=user, status_code=201)
 
     emb = res[0].embedding
     emb_bytes = emb.tobytes()
@@ -832,6 +924,8 @@ def user_history(
         }
     )
 
+# Gov Function
+@app.post('api/auth/')
 # Auth
 
 @app.post('/api/auth/login')
@@ -864,6 +958,7 @@ async def login(request: Request, response: Response):
                                 VALUES (?, ?, ?, ?)"""
 
                 # Convert data into tuple format
+
                 data_tuple = (name, action, time, content)
                 print(data_tuple)
 
@@ -904,6 +999,20 @@ async def serve_image(filename: str):
         return FileResponse(file_path)
         #return FileResponse(file_path, headers={'Cache-Control': 'public, max-age=31536000', 'Last-Modified': time.ctime(os.path.getmtime(file_path))})
     raise HTTPException(status_code=404, detail="File not found")
+
+@app.get('/api/server-management/about')
+async def server_management_about():
+    mac_addr, serial_str = get_mac_info()
+    mac_num = 1
+    temp = {
+        "mac_addr": mac_addr,
+        "serial_str": serial_str,
+        "total_requests": mac_num,
+        "allow_requests": mac_num,
+        "nallow_requests": mac_num,
+    }
+
+    return JSONResponse(content={"data": temp})
 
 if __name__ == "__main__":
     # Start the first script

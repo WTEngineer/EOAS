@@ -4,9 +4,9 @@
       color="var(--cui-primary)"></v-progress-linear>
 
     <div v-if="!loading" class="tw-mb-7 tw-mt-5">
-      <div class="tw-flex tw-justify-between">
+      <div class="tw-flex tw-justify-center">
         <div class="tw-block">
-          <div class="page-subtitle">{{ $t('Oasis Certification Setting') }}</div>
+          <div class="page-subtitle" >{{ $t('Oasis Certification Setting') }}</div>
         </div>
       </div>
 
@@ -16,12 +16,10 @@
             <label class="form-input-label">{{ $t('URL') }}</label>
           </div>
           <div class="tw-w-4-3" style="text-align: left; padding-left: 30px">
-            <v-text-field v-model="form.username" :label="$t('https://oasis.hessen.de/oasisws/spielerstatus')"
-              prepend-inner-icon="mdi-account" style="max-width: 600px" background-color="var(--cui-bg-card)"
+            <v-text-field v-model="url" :label="$t('https://oasis-tst-crt.hessen.de/oasisws/spielerstatus')"
+              style="max-width: 600px; height: 60px" background-color="var(--cui-bg-card)"
               color="var(--cui-text-default)" required solo>
-              <template v-slot:prepend-inner>
-                <v-icon class="text-muted">{{ icons['mdiAccount'] }}</v-icon>
-              </template>
+
             </v-text-field>
           </div>
         </div>
@@ -31,12 +29,9 @@
             <label class="form-input-label">{{ $t('kennung') }}</label>
           </div>
           <div class="tw-w-4-3" style="text-align: left; padding-left: 30px">
-            <v-text-field v-model="form.username" :label="$t('5E35RKBM')" prepend-inner-icon="mdi-account"
-              style="max-width: 600px" background-color="var(--cui-bg-card)" color="var(--cui-text-default)" required
+            <v-text-field v-model="kennung" :label="$t('')" 
+              style="max-width: 600px; height: 60px" background-color="var(--cui-bg-card)" color="var(--cui-text-default)" required
               solo>
-              <template v-slot:prepend-inner>
-                <v-icon class="text-muted">{{ icons['mdiAccount'] }}</v-icon>
-              </template>
             </v-text-field>
           </div>
         </div>
@@ -48,17 +43,15 @@
           <div class="tw-w-4-3"
             style="text-align: left; padding-left: 30px; display: flex; justify-content: space-between; align-items: center">
             <div class="tw-w-4-3">
-              <v-text-field v-model="form.username" :label="$t('WhzGdAxWsVH_()')" prepend-inner-icon="mdi-account"
-                style="max-width: 600px" background-color="var(--cui-bg-card)" color="var(--cui-text-default)" required
+              <v-text-field v-model="pass1" :label="$t('')" 
+                style="max-width: 600px; height: 60px" background-color="var(--cui-bg-card)" color="var(--cui-text-default)" required
                 solo>
-                <template v-slot:prepend-inner>
-                  <v-icon class="text-muted">{{ icons['mdiAccount'] }}</v-icon>
-                </template>
               </v-text-field>
             </div>
             <div class="tw-w-4-1">
-              <v-btn>...</v-btn>
+              <v-btn @click="triggerGetPath">...</v-btn>      
             </div>
+            <input type="file" ref="getPath" @change="handleGetPath" style="display: none" />
           </div>
         </div>
 
@@ -67,12 +60,9 @@
             <label class="form-input-label">{{ $t('Cert-File') }}</label>
           </div>
           <div class="tw-w-4-3" style="text-align: left; padding-left: 30px">
-            <v-text-field v-model="form.username" :label="$t('')" prepend-inner-icon="mdi-account"
-              style="max-width: 600px" background-color="var(--cui-bg-card)" color="var(--cui-text-default)" required
+            <v-text-field v-model="certFilePath" :label="$t('')" 
+              style="max-width: 600px; height: 60px" background-color="var(--cui-bg-card)" color="var(--cui-text-default)" required
               solo>
-              <template v-slot:prepend-inner>
-                <v-icon class="text-muted">{{ icons['mdiAccount'] }}</v-icon>
-              </template>
             </v-text-field>
           </div>
         </div>
@@ -82,12 +72,9 @@
             <label class="form-input-label">{{ $t('passwort') }}</label>
           </div>
           <div class="tw-w-4-3" style="text-align: left; padding-left: 30px">
-            <v-text-field v-model="form.username" :label="$t('74k6-umci-0m5b-1z92-p60g')"
-              prepend-inner-icon="mdi-account" style="max-width: 600px" background-color="var(--cui-bg-card)"
+            <v-text-field v-model="pass2" :label="$t('')"
+               style="max-width: 600px; height: 60px" background-color="var(--cui-bg-card)"
               color="var(--cui-text-default)" required solo>
-              <template v-slot:prepend-inner>
-                <v-icon class="text-muted">{{ icons['mdiAccount'] }}</v-icon>
-              </template>
             </v-text-field>
           </div>
         </div>
@@ -96,10 +83,12 @@
 
     <div class="tw-w-full tw-mt-8" style="display: flex; justify-content: center; align-items: center;">
       <div class="tw-w-1-3" style="display: flex; justify-content: space-evenly;">
-        <v-btn class="tw-mx-2 custom-button">{{ $t('Import') }}</v-btn>
-        <v-btn class="tw-mx-2 custom-button">{{ $t('Ok') }}</v-btn>
-        <v-btn class="tw-mx-2 custom-button">{{ $t('Cancel') }}</v-btn>
+        <v-btn class="tw-mx-2 custom-button" @click="triggerImport">{{ $t('Import') }}</v-btn>
+        <v-btn class="tw-mx-2 custom-button" @click="triggerOk">{{ $t('Ok') }}</v-btn>
+        <v-btn class="tw-mx-2 custom-button" @click="() => {$router.push('/server-management/main') }">{{ $t('Cancel') }}</v-btn>
       </div>
+
+      <input type="file" ref="fileImport" @change="handleFileImport" style="display: none" />
     </div>
 
   </div>
@@ -107,7 +96,7 @@
 
 <script>
 import { mdiAccount, mdiCheckBold, mdiCloseThick, mdiEye, mdiEyeOff, mdiBlockHelper, mdiCreation, mdiKeyVariant, mdiTimelapse, mdiAccountGroup, mdiCellphoneBasic } from '@mdi/js';
-
+import axios from 'axios';
 
 export default {
   name: 'AccountSettings',
@@ -147,6 +136,12 @@ export default {
         newpassword: [],
         newpassword2: [],
       },
+
+      url: 'https://oasis.hessen.de/oasisws/spielerstatus',
+      kennung: '',
+      pass1: '',
+      pass2: '',
+      certFilePath: '',
 
       groupSelect: [this.$t('Administrator'), this.$t('Cofounder')],
       blockSelect: [this.$t('Yes'), this.$t('No')],
@@ -202,6 +197,60 @@ export default {
   },
 
   methods: {
+
+    ////////////////////////////////////////////////////////////
+    triggerImport() {
+      this.$refs.fileImport.click();
+    },
+    async triggerGetPath() {
+      // this.$refs.getPath.click();
+      const res = await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/get-full-path`);
+      this.certFilePath = res.data;
+    },
+    async triggerOk() {
+      // await axios.get
+      // const data = {
+      //   'url': 'https://oasis.hessen.de/oasisws/spielerstatus',
+      //   'kennung': '',
+      //   'pass1': '',
+      //   'pass2': '',
+      //   'certFilePath': '',
+      // }
+      // await axios.post(url, data)
+      this.$router.push('/server-management/main');
+    },
+    handleFileImport(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const text = e.target.result;
+          console.log('text');
+          console.log(text);
+          this.parseFileContent(text);
+        };
+        reader.readAsText(file);
+      }
+    },
+    handleGetPath(event) {
+      const file = event.target.files[0];
+      console.log(event.target.files);
+      if (file) {
+        this.certFilePath = file.name;
+      }
+    },
+    parseFileContent(content) {
+      const kennungMatch = content.match(/Kennung\s*:\s*(\S+)/);
+      const pass1Match = content.match(/Pass1\s*:\s*(\S+)/);
+      const pass2Match = content.match(/Pass2\s*:\s*(\S+)/);
+
+      this.kennung = kennungMatch ? kennungMatch[1] : '';
+      this.pass1 = pass1Match ? pass1Match[1] : '';
+      this.pass2 = pass2Match ? pass2Match[1] : '';
+    },
+
+    ///////////////////////////////////////////////////////////////
+
     async getUserById(id) {
       await this.$store.dispatch('users/getAdmin', id);
     },

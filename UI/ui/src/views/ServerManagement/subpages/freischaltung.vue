@@ -113,8 +113,8 @@
 
     <div class="tw-w-full tw-mt-8" style="display: flex; justify-content: center; align-items: center;">
       <div class="tw-w-1-3" style="display: flex; justify-content: space-evenly;">
-        <v-btn class="tw-mx-2 custom-button">{{ $t('Ok') }}</v-btn>
-        <v-btn class="tw-mx-2 custom-button">{{ $t('Cancel') }}</v-btn>
+        <v-btn class="tw-mx-2 custom-button" @click="triggerOk">{{ $t('Ok') }}</v-btn>
+        <v-btn class="tw-mx-2 custom-button" @click="() => {$router.push('/server-management/main') }">{{ $t('Cancel') }}</v-btn>
       </div>
     </div>
 
@@ -229,6 +229,18 @@ export default {
 
       const top = window.pageYOffset || e.target.scrollTop || 0;
       this.fabAbove = top > 20;
+    },
+    async triggerOk() {
+      // await axios.get
+      // const data = {
+      //   'url': 'https://oasis.hessen.de/oasisws/spielerstatus',
+      //   'kennung': '',
+      //   'pass1': '',
+      //   'pass2': '',
+      //   'certFilePath': '',
+      // }
+      // await axios.post(url, data)
+      this.$router.push('/server-management/main');
     },
     reset() {
       this.form = { ...this.currentUser };

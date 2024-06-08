@@ -266,7 +266,7 @@ export const routes = [
     children: [
       {
         path: 'main',
-        meta: {
+        meta: { 
           name: '',
           child: true,
           auth: {
@@ -368,6 +368,27 @@ export const routes = [
           },
         },
         component: () => import(/* webpackChunkName: "settings" */ '@/views/ServerManagement/subpages/about.vue'),
+      },
+      {
+        path: 'machine',
+        meta: {
+          name: '',
+          child: true,
+          auth: {
+            requiresAuth: true,
+            requiredLevel: ['settings:general:access', 'settings:general:edit'],
+          },
+          config: {
+            fixedNavbar: true,
+            showFooter: true,
+            showNavbar: true,
+            showSidebar: true,
+          },
+          navigation: {
+            icon: 'mdi-application-cog',
+          },
+        },
+        component: () => import(/* webpackChunkName: "settings" */ '@/views/ServerManagement/subpages/machine.vue'),
       },
     ],
   },

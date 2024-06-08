@@ -10,9 +10,17 @@
         v-icon(@click="captureCancel" color="error") {{ icons['mdiClose'] }}
       v-card-title(v-else="IDcardStatus" style="display: flex; justify-content: space-between") {{$t('id_card_detect')}}
         v-icon(@click="captureCancel" color="error") {{ icons['mdiClose'] }}
-      v-card-text
+      v-card-text(v-if="!IDcardStatus")
         video(ref="video" width="640" height="480" autoplay style="border: 1px solid #000;")
         canvas(ref="canvas" width="640" height="480" style="display: none;")
+      v-card-text(v-else="IDcardStatus")
+        .tw-w-full
+          .camera-box
+            img(
+              :src="idStream"
+              alt="Camera Feed"
+              class="camera-stream"
+            )
       v-card-actions
         v-spacer
         v-btn(v-if="!IDcardStatus" color="success" @click="capture") {{$t('capture')}}
@@ -114,6 +122,7 @@
 import SignaturePad from 'signature_pad';
 import api from '../../../api';
 import { mdiCheckBold, mdiCloseThick, mdiClose } from '@mdi/js';
+import axios from 'axios';
 
 export default {
   data() {
@@ -123,6 +132,8 @@ export default {
         mdiCloseThick,
         mdiClose
       },
+      idStream: '',
+      intervalId: '',
       sign: `http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/images/sample.jpg`,
       user: {},
       userId: '',
@@ -208,6 +219,7 @@ export default {
   created() {
     const userId = this.$route.params.id;
     this.userId = userId;
+    
     if (this.$route.params.id) {
       this.fetchUserData(userId);
     }
@@ -244,6 +256,15 @@ export default {
     //   }
     // }
   },
+  async beforeDestroy() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+    await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/camera/camera_1/off`);
+    await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/camera/camera_2/off`);
+    // await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/camera/camera_3/off`);
+    // await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/camera/camera_4/off`);
+  },
   methods: {
     onScroll(e) {
       if (typeof window === 'undefined') {
@@ -277,7 +298,16 @@ export default {
       this.user = {...this.user, avatar: this.capturedImage};
       this.showCam = false;
     },
-    captureCancel() {
+    async captureCancel() {
+      if (this.IDcardStatus) {
+        if (this.intervalId) {
+         clearInterval(this.intervalId);
+        }
+        await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/camera/camera_1/off`);
+        await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/camera/camera_2/off`);
+        // await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/camera/camera_3/off`);
+        // await axios.get(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/api/camera/camera_4/off`);
+      }
       this.stopCamera();
       this.showCam = false;
     },
@@ -293,18 +323,30 @@ export default {
       this.showCam = true;
     },
     showIDCamModal() {
-      this.startCamera();
       this.IDcardStatus = true;
       this.showCam = true;
+      this.idStream = `http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/id-analytics/stream`;
+      this.intervalId = setInterval(this.fetchAnalyticsData, 1000);
+      // fetch(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/id-analytics`)
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     console.log('ID data');
+      //     console.log(data);
+      //     this.user = {...this.user, ...data};
+      //     this.showCam = false;
+      //   })
+      //   .catch(error => console.error('Error fetching id analytics data:', error));
+    },
+    fetchAnalyticsData() {
       fetch(`http://${process.env.VUE_APP_SERVER_ADDRESS}:8000/id-analytics`)
         .then(response => response.json())
         .then(data => {
-          console.log('ID data');
-          console.log(data);
-          this.user = {...this.user, ...data};
-          this.showCam = false;
+          console.log(data.name);
+          if (data && data.name) {
+            this.user = {...this.user, ...data};
+          }
         })
-        .catch(error => console.error('Error fetching id analytics data:', error));
+        .catch(error => console.error('Error fetching analytics data:', error));
     },
     save() {
       console.log(this.user);
@@ -370,6 +412,23 @@ export default {
 </script>
 
 <style scoped>
+.camera-box {
+  width: 560px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  position: relative;
+}
+
+.camera-stream {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .tw-w-1-2 {
   width: 50%;
 }

@@ -32,7 +32,7 @@ export default {
         this.$router.push('/ServerManagement/oasisSetting');
       }
       else if (button ==  'Freischaltung') {
-        this.$router.push('/ServerManagement/freischaltung');
+        this.$router.push('/ServerManagement/ ');
       }
       // Add more conditions here if you have more buttons that should navigate to different components
     },
